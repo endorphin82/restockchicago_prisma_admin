@@ -1,9 +1,0 @@
-query CategoriesAll{
-    categoriesAll{
-        _id
-        name
-        icons
-        images
-        parent
-    }
-}
