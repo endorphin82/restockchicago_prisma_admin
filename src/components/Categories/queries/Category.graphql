@@ -1,0 +1,24 @@
+query category($where: CategoryWhereUniqueInput!){
+    category(where: $where){
+        id
+        name
+        description
+        url
+        parent
+        icon
+        images{
+            id
+            url
+        }
+        products{
+            id
+            name
+            price
+            icon
+            images{
+                id
+                url
+            }
+        }
+    }
+}
