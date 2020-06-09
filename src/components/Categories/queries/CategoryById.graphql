@@ -1,0 +1,9 @@
+query CategoryById($_id: String){
+    categoryById(_id: $_id){
+        _id
+        name
+        icons
+        images
+        parent
+    }
+}

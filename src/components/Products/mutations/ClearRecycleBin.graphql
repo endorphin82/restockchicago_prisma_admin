@@ -1,0 +1,5 @@
+mutation ClearRecycleBin {
+    clearRecycleBin{
+        __typename
+    }
+}

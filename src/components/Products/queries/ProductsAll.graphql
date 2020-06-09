@@ -1,0 +1,10 @@
+query ProductsAll{
+    productsAll{
+        id
+        name
+        price
+        images
+        icon
+        categories
+    }
+}
