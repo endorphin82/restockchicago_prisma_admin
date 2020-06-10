@@ -1,0 +1,24 @@
+query ProductsByCategoryId($category_id: Int!){
+    productsByCategoryId(category_id: $category_id){
+        id
+        name
+        price
+        icon
+        images{
+            id
+            url
+        }
+        category{
+            id
+            name
+            parent
+            url
+            description
+            icon
+            images{
+                id
+                url
+            }
+        }
+    }
+}

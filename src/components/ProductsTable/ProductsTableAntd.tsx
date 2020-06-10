@@ -2,17 +2,18 @@ import React from "react"
 import { priceToDollars } from "../../utils/utils"
 import { Button, Table, Tooltip, Tag } from "antd"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
-import { ProductsAll } from "../Products/queries/__generated__/ProductsAll"
+import { Products } from "../Products/queries/__generated__/Products"
+import { Category } from '../../__generated__/types'
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 
 interface PropsProductsTableAntd {
-  handleEditProp: (id: String) => void
-  handleDeleteProp: (id: String) => void
-  productsAllWithoutRecycleBinProp: ProductsAll
+  handleEditProp: (id: Number) => void
+  handleDeleteProp: (id: Number) => void
+  productsProp: Products
 }
 
-const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, handleDeleteProp, productsAllWithoutRecycleBinProp }) => {
+const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, handleDeleteProp, productsProp }) => {
   const columns = [
     {
       title: "Name",
@@ -33,16 +34,14 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       }
     },
     {
-      title: "Categories",
-      dataIndex: "categories",
-      key: "categories",
-      render: (categories: String[]) => (
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      render: (category: Category) => (
         <span>
-          {categories.map(tag => (
-            <Tag color="blue" key={String(tag)}>
-              {tag}
+            <Tag color="blue" key={String(category.name)}>
+              {category.name}
             </Tag>
-          ))}
         </span>
       )
     },
@@ -70,7 +69,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       title: "Actions",
       dataIndex: "id",
       key: "id",
-      render: (id: String) => <>
+      render: (id: Number) => <>
         <Tooltip title="Edit this product">
           <Button onClick={() => handleEditProp(id)}
                   type="dashed">
@@ -94,7 +93,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       <Table
         // TODO:
         // @ts-ignore
-        dataSource={productsAllWithoutRecycleBinProp}
+        dataSource={productsProp}
         columns={columns}
         rowKey="id"/>
     </>

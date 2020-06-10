@@ -3,15 +3,15 @@ import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import { connect } from "react-redux"
 import { setIsOpenAddCategoryModal } from "../../actions"
-import CategoriesTable from "../CategoriesTable"
-import CategoryAddForm from "../CategoryAddForm"
+import CategoriesTable from '../CategoriesTable'
 import CategoryEditForm from "../CategoryEditForm"
+import CategoryAddForm from '../CategoryAddForm'
 
 export interface PropsCategories {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
 }
 
-const Categories: React.FC<PropsCategories> = ({ setIsOpenAddCategoryModal }) => {
+const Categories: React.FC<any> = ({ setIsOpenAddCategoryModal }) => {
   const onClickHandler = () => {
     setIsOpenAddCategoryModal(true)
   }

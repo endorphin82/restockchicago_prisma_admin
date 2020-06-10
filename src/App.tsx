@@ -1,11 +1,13 @@
-import React from "react"
-import TabsContainer from "./components/TabsContainer"
-import "antd/dist/antd.css"
-import "./App.css"
-import {REACT_APP_BASE_URL} from "./actions/types"
+import React from 'react'
+
+import 'antd/dist/antd.css'
+import './App.css'
+import { REACT_APP_BASE_URL } from './actions/types'
+import TabsContainer from './components/TabsContainer'
+import categoriesList from './reducer/categories-list'
 
 const App: React.FC = () => {
-  console.log("app.tsx")
+  console.log('app.tsx')
   return (
     <div className="App">
       <header className="App-header">

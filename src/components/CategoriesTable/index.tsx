@@ -1,26 +1,25 @@
-import React, { useState } from "react"
-import { Button, Modal, Table, Tooltip, Tag } from "antd"
-import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import { Category, Product } from "../../__generated__/types"
-import { useDeleteCascadeCategoryWithProductsById } from "../Categories/mutations/__generated__/DeleteCascadeCategoryWithProductsById"
-import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
-import { editCategory } from "../../actions"
-import { setIsOpenEditCategoryModal } from "../../actions"
-import { connect } from "react-redux"
+import React, { useState } from 'react'
+import { Button, Modal, Table, Tooltip, Tag } from 'antd'
+import { Category, Product } from '../../__generated__/types'
+import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined'
+import { editCategory } from '../../actions'
+import { setIsOpenEditCategoryModal } from '../../actions'
+import { connect } from 'react-redux'
+import { useCategories, CategoriesDocument } from '../Categories/queries/__generated__/Categories'
+import { useDeleteOneCategory } from '../Categories/mutations/__generated__/DeleteOneCategory'
 
-const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
+const styleIconInTable = { width: '20px', height: '100%', marginRight: '10px' }
 
 export interface PropsCategoryTable {
   editCategory: (product: Product | undefined) => void
   setIsOpenEditCategoryModal: (isOpen: Boolean | undefined) => void
 }
 
-const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpenEditCategoryModal }) => {
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
-  const [deleteCascadeCategoryWithProductsById] = useDeleteCascadeCategoryWithProductsById({
+const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryModal }) => {
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
+  const [deleteOneCategory] = useDeleteOneCategory({
       refetchQueries: [{
-        query: CategoriesAllDocument
+        query: CategoriesDocument
       }]
     }
   )
@@ -32,30 +31,36 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
   if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { categoriesAll } = cat_data
+  const { categories } = cat_data
 
   // @ts-ignore
-  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
-    return category._id !== REACT_APP_RECYCLE_BIN_ID
-  })
+  // const categoriesAllWithoutRecycleBin = categories?.filter((category: Category) => {
+  //   return category._id !== REACT_APP_RECYCLE_BIN_ID
+  // })
 
-  const handleEdit = (_id: String): void => {
-    const cat = categoriesAllWithoutRecycleBin?.find((cat: Category) => cat._id === _id)
+  const handleEdit = (id): void => {
+    // @ts-ignore
+
+    const cat = categories?.find((cat: Category) => cat.id === id)    //
+    // @ts-ignore
     editCategory(cat)
     setIsOpenEditCategoryModal(true)
   }
 
-  const handleDelete = (_id: String): void => {
+  const handleDelete = (id: Number): void => {
     setIsVisualDeleteModal(true)
-    setCategoryDeleted(categoriesAllWithoutRecycleBin.find((cat: Category) => cat._id === _id))
+    // @ts-ignore
+    setCategoryDeleted(categories.find((cat: Category) => cat.id === id))
   }
 
-  const handleOk = (_id: String) => {
-    deleteCascadeCategoryWithProductsById({
+  const handleOk = (id: Number) => {
+    deleteOneCategory({
       variables: {
-        _id: String(_id)
+        where: {
+          id: Number(id)
+        }
       }
-    }).then((mess: any) => console.log("deleteCascadeCategoryWithProductsById response:", mess))
+    }).then((mess: any) => console.log('deleteCascadeCategoryWithProductsById response:', mess))
     setIsVisualDeleteModal(false)
   }
 
@@ -64,19 +69,19 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
   }
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name"
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name'
     },
     {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id"
+      title: 'ID',
+      dataIndex: '_id',
+      key: '_id'
     },
     {
-      title: "Parent",
-      dataIndex: "parent",
-      key: "parent",
+      title: 'Parent',
+      dataIndex: 'parent',
+      key: 'parent',
       render: (parent: String) => {
         return parent ?
           <span>
@@ -85,28 +90,26 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
       }
     },
     {
-      title: "Icons",
-      dataIndex: "icons",
-      key: "icons",
-      render: (icons: String[]) => {
-        return (icons.length !== 0)
+      title: 'Icons',
+      dataIndex: 'icons',
+      key: 'icons',
+      render: (icon: String) => {
+        return icon
           ? <div>
-            {
-              icons
-                .map(icon => <img
-                  key={String(icon)} alt="img"
-                  src={String(icon)}
-                  style={styleIconInTable}/>
-                )
-            }
+
+            <img
+              key={String(icon)} alt="img"
+              src={String(icon)}
+              style={styleIconInTable}/>
+            )
           </div>
           : <span>no icons</span>
       }
     },
     {
-      title: "Images",
-      dataIndex: "images",
-      key: "images",
+      title: 'Images',
+      dataIndex: 'images',
+      key: 'images',
       render: (icons: String[]) => {
         return (icons.length !== 0)
           ? <div>
@@ -123,20 +126,20 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
       }
     },
     {
-      title: "Actions",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: String) => <>
+      title: 'Actions',
+      dataIndex: '_id',
+      key: 'id',
+      render: (id: Number) => <>
         <Tooltip title="Edit this category">
-          <Button onClick={() => handleEdit(_id)}
+          <Button onClick={() => handleEdit(id)}
                   type="dashed">
             Edit
           </Button>
         </Tooltip>
         <Tooltip
           title="Delete Category With All Products">
-          <Button style={{ float: "right" }}
-                  onClick={() => handleDelete(String(_id))}
+          <Button style={{ float: 'right' }}
+                  onClick={() => handleDelete(Number(id))}
                   type="dashed"
                   danger
                   icon={<DeleteOutlined/>}>
@@ -148,7 +151,7 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
 
   return (
     <>
-      <Table dataSource={categoriesAllWithoutRecycleBin} columns={columns} rowKey="id"/>
+      <Table dataSource={categories} columns={columns} rowKey="id"/>
       <Modal
         title="Delete Category With All Products WITHOUT recovery!?"
         visible={Boolean(isVisualDeleteModal)}
