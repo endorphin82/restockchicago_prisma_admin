@@ -1,9 +1,0 @@
-mutation UpdateCategory($_id: String!, $name: String!, $images: [String], $icons: [String], $parent: String ) {
-    updateCategory(_id: $_id, name: $name, images: $images, icons: $icons, parent: $parent){
-        _id
-        name
-        images
-        icons
-        parent
-    }
-}

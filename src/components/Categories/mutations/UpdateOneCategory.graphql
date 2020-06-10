@@ -1,19 +1,20 @@
-query Products{
-    products{
+mutation UpdateOneCategory($data: CategoryUpdateInput!,
+$where: CategoryWhereUniqueInput! ) {
+    updateOneCategory(data: $data, where: $where){
         id
         name
-        price
+        description
+        url
+        parent
         icon
         images{
             id
             url
         }
-        category{
+        products{
             id
             name
-            parent
-            url
-            description
+            price
             icon
             images{
                 id
