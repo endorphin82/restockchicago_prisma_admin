@@ -3,11 +3,11 @@ query ProductByName($name: String!){
         id
         name
         price
+        icon
         images{
             id
             url
         }
-        icon
         category{
             id
             name

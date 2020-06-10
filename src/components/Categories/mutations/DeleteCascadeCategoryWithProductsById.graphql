@@ -1,5 +1,0 @@
-mutation DeleteCascadeCategoryWithProductsById($_id: String!) {
-    deleteCascadeCategoryWithProductsById(_id: $_id){
-    __typename
-    }
-}

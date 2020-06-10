@@ -1,5 +1,5 @@
-query Products{
-    products{
+query ProductsByNameAndCategoryId($name: String!, $category_id: Int!){
+    productsByNameAndCategoryId(name: $name, category_id: $category_id){
         id
         name
         price

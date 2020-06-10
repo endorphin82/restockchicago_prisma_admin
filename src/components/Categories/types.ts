@@ -1,5 +1,5 @@
-import { CategoriesAll } from "./queries/__generated__/CategoriesAll";
+import { Categories } from "./queries/__generated__/Categories";
 
-export interface ICategoriesAll {
-  categoriesAll: CategoriesAll  // TODO: Put correct type here
+export interface ICategories {
+  categories: Categories  // TODO: Put correct type here
 }

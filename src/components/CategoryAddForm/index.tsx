@@ -4,14 +4,12 @@ import { Modal, Form, Input, Button, Select } from "antd"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import { setIsOpenAddCategoryModal } from "../../actions"
-import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { ICategoriesAll } from "../Categories/types"
-import { useAddCategory } from "../Categories/mutations/__generated__/AddCategory"
-import {
-  CategoriesAllDocument, useCategoriesAll
-} from "../Categories/queries/__generated__/CategoriesAll"
-import { Category } from "../../__generated__/types"
+import { ICategories } from "../Categories/types"
+
+import { Category, CategoryCreateInput } from '../../__generated__/types'
+import { CategoriesDocument, useCategories } from '../Categories/queries/__generated__/Categories'
+import { useCreateOneCategory } from '../Categories/mutations/__generated__/CreateOneCategory'
 
 type PropsCategoryAddForm = {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
@@ -23,24 +21,24 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
     setIsOpenAddCategoryModal,
     isOpenAddCategoryModal
   }) => {
-  const [addCategory] = useAddCategory(
+  const [createOneCategory] = useCreateOneCategory(
     {
       // TODO:
       // @ts-ignore
-      update(cache, { data: { addCategory } }) {
-        const { categoriesAll } = cache.readQuery<ICategoriesAll>({ query: CategoriesAllDocument })!.categoriesAll
+      update(cache, { data: { createOneCategory } }) {
+        const { categories } = cache.readQuery<ICategories>({ query: CategoriesDocument })!.categories
         cache.writeQuery({
-          query: CategoriesAllDocument,
-          data: { categoriesAll: categoriesAll?.concat([addCategory]) }
+          query: CategoriesDocument,
+          data: { categoriesAll: categories?.concat([createOneCategory]) }
         })
       },
       refetchQueries: [{
-        query: CategoriesAllDocument
+        query: CategoriesDocument
       }]
     }
   )
 
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [values, setValues] = useState<Category | any>({})
 
   if (cat_loading) {
@@ -49,15 +47,15 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
   if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { categoriesAll } = cat_data
+  const { categories } = cat_data
 
   // @ts-ignore
-  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
-    return category._id !== REACT_APP_RECYCLE_BIN_ID
-  })
+  // const categoriesAllWithoutRecycleBin = categories?.filter((category: Category) => {
+  //   return category._id !== REACT_APP_RECYCLE_BIN_ID
+  // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { _id, icons, images, name } = values
+    const { icon, description, images, url, name } = values
     // const _id = String(values._id)
     // const name = String(valuefromformlist.name)
     console.log("++++++++++++",
@@ -67,16 +65,19 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
       values
     )
 
-    addCategory({
+    createOneCategory({
       variables: {
-        _id,
-        name,
-        icons,
-        images,
-        parent: valuefromformlist.parent
+        data: {
+          name,
+          description,
+          url,
+          icon,
+          images,
+          parent: valuefromformlist.parent
+        }
       }
-    }).then(m => console.log("addCategoryMESSAGE:", m))
-      .catch(e => console.log("addCategoryERROR:", e))
+    }).then((m: any) => console.log("addCategoryMESSAGE:", m))
+      .catch((e: any) => console.log("addCategoryERROR:", e))
 
     setIsOpenAddCategoryModal(false)
   }
@@ -90,6 +91,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
     setValues({ ...values, [name]: value })
   }
 
+  // @ts-ignore
   return (
     <Modal
       title="Category information"
@@ -99,18 +101,9 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
     >
       <Form
         name="category" {...formItemLayoutWithOutLabel}
-        // @ts-ignore
         onFinish={onFinish}>
 
-        <Form.Item
-          label="ID category"
-          rules={[{ required: true, message: "ID category is required" }]}
-        >
-          <Input
-            name="_id"
-            onChange={handleChange} placeholder="name category"
-            style={{ width: "100%", marginRight: 8 }}/>
-        </Form.Item>
+
 
         <Form.Item
           label="Name category"
@@ -123,6 +116,15 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
         </Form.Item>
 
         <Form.Item
+          label="Description category"
+        >
+          <Input
+            name="description"
+            onChange={handleChange} placeholder="Description category"
+            style={{ width: "100%", marginRight: 8 }}/>
+        </Form.Item>
+
+        <Form.Item
           label="Parent category"
           name="parent"
           // TODO:
@@ -131,11 +133,11 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
         >
           <Select
             placeholder="Select category">
-            {categoriesAllWithoutRecycleBin?.map((category: Category) =>
+            {categories?.map((category: Category) =>
               <Select.Option
-                key={String(category._id)}
-                value={String(category._id)}
-              >{category._id}
+                key={String(category.id)}
+                value={String(category.id)}
+              >{category.id}
               </Select.Option>
             )
             }

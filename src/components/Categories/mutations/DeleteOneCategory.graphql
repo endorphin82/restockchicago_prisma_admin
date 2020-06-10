@@ -1,19 +1,19 @@
-query Products{
-    products{
+mutation DeleteOneCategory($where: CategoryWhereUniqueInput!) {
+    deleteOneCategory(where: $where){
         id
         name
-        price
+        description
+        url
+        parent
         icon
         images{
             id
             url
         }
-        category{
+        products{
             id
             name
-            parent
-            url
-            description
+            price
             icon
             images{
                 id

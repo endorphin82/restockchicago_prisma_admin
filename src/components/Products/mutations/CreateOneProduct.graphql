@@ -1,5 +1,5 @@
-query Products{
-    products{
+mutation CreateOneProduct($data: ProductCreateInput! ) {
+    createOneProduct(data: $data ){
         id
         name
         price
@@ -11,9 +11,9 @@ query Products{
         category{
             id
             name
-            parent
-            url
             description
+            url
+            parent
             icon
             images{
                 id
