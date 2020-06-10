@@ -11,8 +11,7 @@ interface Props {
   searchCategories: String[] | [] | undefined
 }
 
-
-const ProductsSelectByCategories: React.FC<Props> = ({ categories, handleChange, searchCategories }) => {
+const ProductsSelectByCategory: React.FC<Props> = ({ categories, handleChange, searchCategories }) => {
   return (
     <Select
       mode="multiple"
@@ -51,7 +50,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   searchCategories: state.search_categories_list.searchCategories
 })
 
-export default connect<typeof ProductsSelectByCategories>(
+export default connect<typeof ProductsSelectByCategory>(
 // @ts-ignore
   mapStateToProps
-)(ProductsSelectByCategories)
+)(ProductsSelectByCategory)

@@ -1,71 +1,73 @@
-import React, { useEffect, useState } from "react"
-import { Modal } from "antd"
-import { connect } from "react-redux"
+import React, { useEffect, useState } from 'react'
+import { Modal } from 'antd'
+import { connect } from 'react-redux'
 import {
   editProduct,
   setIsOpenEditProductModal, setSearchCategories,
   setSearchName
-} from "../../actions"
-import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import ProductsTableAntd from "./ProductsTableAntd"
-import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
-import { Product } from "../../__generated__/types"
-import ProductsSearch from "../ProductsSearch"
-import ProductsSelectByCategories from "../ProductsSelectByCategories"
+} from '../../actions'
+import ProductsTableAntd from './ProductsTableAntd'
+
+import { Product } from '../../__generated__/types'
+import ProductsSearch from '../ProductsSearch'
+
+import { RootState } from '../../reducer'
 import {
-  ProductsByNameAndCategoriesIdDocument,
-  useProductsByNameAndCategoriesId
-} from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
-import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { RootState } from "../../reducer"
+  useProductsByNameAndCategoryId
+} from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
+import { useCategories } from '../Categories/queries/__generated__/Categories'
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
-  setSearchCategories: (searchCtegories: String[] | [] | undefined) => void
+  setSearchCategory: (searchCtegory: Number | Number[] | [] | undefined) => void
   setSearchName: (searchName: String | void | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
   categories: String[] | [] | any
   searchName: String | void | undefined
-  searchCategories: String[] | [] | undefined
+  searchCategory: Number | Number[] | [] | undefined
 }
 
-const ProductsTable: React.FC<PropsProductsTable> = ({ categories, editProduct, setIsOpenEditProductModal, setSearchCategories, setSearchName, searchName, searchCategories }) => {
-  const [updateProduct] = useUpdateProduct(
-    {
-      refetchQueries: [{
-        query: ProductsByCategoryIdDocument,
-        variables: {
-          id: REACT_APP_RECYCLE_BIN_ID
-        }
-      },
-        {
-          query: ProductsByNameAndCategoriesIdDocument,
-          variables: {
-            name: searchName,
-            categories: searchCategories
-          }
-        }]
-    }
-  )
+const ProductsTable: React.FC<any> = (
+  {
+    categories, editProduct, setIsOpenEditProductModal, setSearchCategory,
+    setSearchName, searchName, searchCategory
+  }) => {
 
-  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoriesId(
+  // const [updateOneProduct] = useUpdateOneProduct(
+  //   {
+  //     refetchQueries: [{
+  //       query: ProductsByCategoryIdDocument,
+  //       variables: {
+  //         id: REACT_APP_RECYCLE_BIN_ID
+  //       }
+  //     },
+  //       {
+  //         query: ProductsByNameAndCategoryIdDocument,
+  //         variables: {
+  //           name: searchName,
+  //           category_id: searchCategory
+  //         }
+  //       }]
+  //   }
+  // )
+
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryId(
     {
       variables: {
         name: searchName as string,
-        categories: searchCategories as string[]
+        category_id: searchCategory as number
       }
     }
   )
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
 
-  useEffect(() => {
-    setSearchCategories(categories)
-  }, [categories])
+  // useEffect(() => {
+  //   setSearchCategory(categories)
+  // }, [categories])
 
-  console.log("productDeleted", productDeleted)
+  console.log('productDeleted', productDeleted)
 
   if (prod_loading || cat_loading) {
     return (<div>Loading...</div>)
@@ -73,38 +75,41 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ categories, editProduct, 
   if (prod_error || !prod_data || cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { productsByNameAndCategoriesId } = prod_data
+  const { productsByNameAndCategoryId } = prod_data
 
   // TODO:
   // @ts-ignore
-  const productsAllWithoutRecycleBin = productsByNameAndCategoriesId?.filter((prod: Product) => {
-    return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
-  })
-  const handleEdit = (id: String): void => {
-    const prod = productsAllWithoutRecycleBin?.find((prod: Product) => prod.id === id)
+  // const productsAllWithoutRecycleBin = productsByNameAndCategoriesId?.filter((prod: Product) => {
+  //   return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
+  // })
+  const handleEdit = (id: Number): void => {
+    // @ts-ignore
+    const prod = productsByNameAndCategoryId?.find((prod: Product) => prod.id === id)
+    // @ts-ignore
     editProduct(prod)
     setIsOpenEditProductModal(true)
   }
 
-  const handleDelete = (id: String): void => {
+  const handleDelete = (id: Number): void => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsAllWithoutRecycleBin.find((prod: Product) => prod.id === id))
+    // @ts-ignore
+    setProductDeleted(productsByNameAndCategoryId?.find((prod: Product) => prod.id === id))
   }
 
-  const handleOk = (productDeleted: Product | any): void => {
-    const { id, name, price, categories, images, icon } = productDeleted
-
-    categories.push(REACT_APP_RECYCLE_BIN_ID)
-
-    updateProduct({
-      variables: {
-        id, name, price, categories, images, icon
-      }
-    }).then(m => console.log("updateProductMESSAGE:", m))
-      .catch((e: Error) => console.log("updateProductERROR:", e))
-
-    setIsVisualDeleteModal(false)
-  }
+  // const handleOk = (productDeleted: Product | any): void => {
+  //   const { id, name, price, category_id, images, icon } = productDeleted
+  //
+  //   // categories.push(REACT_APP_RECYCLE_BIN_ID)
+  //
+  //   updateProduct({
+  //     variables: {
+  //       id, name, price, categories, images, icon
+  //     }
+  //   }).then(m => console.log("updateProductMESSAGE:", m))
+  //     .catch((e: Error) => console.log("updateProductERROR:", e))
+  //
+  //   setIsVisualDeleteModal(false)
+  // }
 
   const handleCancel = () => {
     setIsVisualDeleteModal(false)
@@ -120,25 +125,26 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ categories, editProduct, 
     }
   }
 
-  const handleChange = (values: string[]) => {
-    if (values.length < 1) {
-      setSearchCategories(categories)
-    }
-    setSearchCategories(values)
+  const handleChange = (value: number) => {
+    setSearchCategory(value)
   }
+
 
   return (
     <>
       <ProductsSearch handleEnterSearch={handleEnterSearch}
                       handleSearch={handleSearch}/>
-      <ProductsSelectByCategories handleChange={handleChange}/>
-      <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin}
-                         handleEditProp={handleEdit}
-                         handleDeleteProp={handleDelete}/>
+      {/*<ProductsSelectByCategory handleChange={handleChange}/>*/}
+
+      <ProductsTableAntd
+        // @ts-ignore
+        productsProp={productsByNameAndCategoryId}
+        handleEditProp={handleEdit}
+        handleDeleteProp={handleDelete}/>
       <Modal
         title="Delete product in recycle bin?"
         visible={Boolean(isVisualDeleteModal)}
-        onOk={() => handleOk(productDeleted)}
+        // onOk={() => handleOk(productDeleted)}
         onCancel={handleCancel}
       >
         <p>{productDeleted.id}</p>

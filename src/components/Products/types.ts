@@ -1,22 +1,18 @@
 import {   REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
-
-import { Product, Category, MutationAddProductArgs } from "../../__generated__/types"
-import { ProductsAll } from "./queries/__generated__/ProductsAll"
-import {
-  ProductsByNameAndCategoriesId,
-  ProductsByNameAndCategoriesIdDocument
-} from "./queries/__generated__/ProductsByNameAndCategoriesId"
+import { Product, Category } from '../../__generated__/types'
+import { Products } from './queries/__generated__/Products'
+import { ProductsByNameAndCategoryId } from "./queries/__generated__/ProductsByNameAndCategoryId"
 
 // export interface AllTasksResult {
 //   allTasks: any;  // TODO: Put correct type here
 // }
 
-export interface IProductsAll {
-  productsAll: ProductsAll  // TODO: Put correct type here
+export interface IProducts {
+  products: Products  // TODO: Put correct type here
 }
-export interface IProductsByNameAndCategoriesId {
-  productsByNameAndCategoriesId: ProductsByNameAndCategoriesId  // TODO: Put correct type here
+export interface IProductsByNameAndCategoryId {
+  productsByNameAndCategoryId: ProductsByNameAndCategoryId  // TODO: Put correct type here
 }
 
 export interface PropsProducts {
@@ -28,8 +24,8 @@ export interface PropsUpdateProduct {
   variables: Product
 }
 
-export interface ResponseProductsAllQueryData {
-  productsAll: Product[] | any
+export interface ResponseProductsQueryData {
+  products: Product[] | any
 }
 
 export interface ResponseProductsByCategoryIdQueryData {

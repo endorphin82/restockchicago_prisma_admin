@@ -9,11 +9,12 @@ import {
   REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { IProductsByNameAndCategoriesId } from "../Products/types"
-import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
-import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { Product } from "../../__generated__/types"
-import { ProductsByNameAndCategoriesIdDocument } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
+import { ProductsByNameAndCategoryIdDocument } from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
+import { IProductsByNameAndCategoryId } from "../Products/types"
+import { useCreateOneProduct } from "../Products/mutations/__generated__/CreateOneProduct"
+import { useCategories } from "../Categories/queries/__generated__/Categories"
+
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
@@ -23,13 +24,13 @@ type PropsProductAddForm = {
 }
 
 const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
-  const [addProduct] = useAddProduct(
+  const [createOneProduct] = useCreateOneProduct(
     {
       // TODO:
       // @ts-ignore
       update(cache, { data: { addProduct } }) {
-        const { productsByNameAndCategoriesId } = cache.readQuery<IProductsByNameAndCategoriesId>({
-          query: ProductsByNameAndCategoriesIdDocument,
+        const { productsByNameAndCategoryId } = cache.readQuery<IProductsByNameAndCategoryId>({
+          query: ProductsByNameAndCategoryIdDocument,
           variables: {
             name: searchName,
             categories: searchCategories
@@ -48,20 +49,20 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
                     }
 
            */
-        })!.productsByNameAndCategoriesId
+        })!.productsByNameAndCategoryId
         cache.writeQuery({
-          query: ProductsByNameAndCategoriesIdDocument,
+          query: ProductsByNameAndCategoryIdDocument,
           data: {
             // if add product includes search categories, update cache query productsByNameAndCategoriesId
             // @ts-ignore
-            productsByNameAndCategoriesId: addProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoriesId?.concat([addProduct]) : productsByNameAndCategoriesId
+            productsByNameAndCategoryId: createOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.concat([createOneProduct]) : productsByNameAndCategoryId
           }
         })
       }
       ,
       refetchQueries: [
         {
-          query: ProductsByNameAndCategoriesIdDocument,
+          query: ProductsByNameAndCategoryIdDocument,
           variables: {
             name: searchName,
             categories: searchCategories
@@ -71,7 +72,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
 
     }
   )
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [values, setValues] = useState<Product | any>({})
   console.log("values+++", values)
 
@@ -81,15 +82,19 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
     const { name, icon } = values
     const price = priceStringToIntCent(values.price)
     console.log("onFinish")
-    addProduct({
+
+    createOneProduct({
       variables: {
-        name,
-        price,
-        categories: valuefromformlist.categories,
-        images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
-        icon
+        data:{
+          name,
+          price,
+          category_id: valuefromformlist.category_id,
+          // @ts-ignore
+          images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
+          icon
+        }
       }
-    }).then(m => console.log("addProduct:", m))
+    }).then(m => console.log("createOneProduct:", m))
       .catch(e => console.log("addProductERROR:", e))
 
     setIsOpenAddProductModal(false)
@@ -115,10 +120,10 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
   if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { categoriesAll } = cat_data
-  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
-    return category?._id !== REACT_APP_RECYCLE_BIN_ID
-  })
+  const { categories } = cat_data
+  // const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
+  //   return category?._id !== REACT_APP_RECYCLE_BIN_ID
+  // })
   console.log("isOpenAddProductModal", isOpenAddProductModal)
 
   return (
@@ -162,12 +167,12 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
             onChange={handleChangeSelect}
             mode="multiple"
             placeholder="Select category">
-            {categoriesAllWithoutRecycleBin?.map((category) =>
+            {categories?.map((category) =>
               <Select.Option
-                key={String(category?._id)}
-                value={String(category?._id)}
+                key={String(category?.id)}
+                value={String(category?.id)}
                 onChange={handleChange}
-              >{String(category?._id)}
+              >{String(category?.id)}
               </Select.Option>
             )
             }

@@ -508,6 +508,7 @@ export type Query = {
   productByName: Product;
   categoryByName: Category;
   productsByNameAndCategoryId: Array<Product>;
+  productsByCategoryId: Array<Product>;
 };
 
 
@@ -543,6 +544,11 @@ export type QueryCategoryByNameArgs = {
 
 export type QueryProductsByNameAndCategoryIdArgs = {
   name: Scalars['String'];
+  category_id: Scalars['Int'];
+};
+
+
+export type QueryProductsByCategoryIdArgs = {
   category_id: Scalars['Int'];
 };
 

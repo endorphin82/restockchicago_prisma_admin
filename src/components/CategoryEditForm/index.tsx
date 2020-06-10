@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react"
-import { connect } from "react-redux"
-import { RootState } from "../../reducer"
-import { clearEditCategory, setIsOpenEditCategoryModal } from "../../actions"
-import { Button, Form, Input, Modal, Select } from "antd"
-import { useUpdateCategory } from "../Categories/mutations/__generated__/UpdateCategory"
-import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
-import { Category } from "../../__generated__/types"
-import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
-import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import React, { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
+import { RootState } from '../../reducer'
+import { clearEditCategory, setIsOpenEditCategoryModal } from '../../actions'
+import { Button, Form, Input, Modal, Select } from 'antd'
+import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
+import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
+import { Category } from '../../__generated__/types'
+import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
+import { useUpdateOneCategory } from '../Categories/mutations/__generated__/UpdateOneCategory'
+import { ProductsDocument } from '../Products/queries/__generated__/Products'
+import { CategoriesDocument, useCategories } from '../Categories/queries/__generated__/Categories'
 
 type PropsCategoryEditForm = {
   setIsOpenEditCategoryModal: (isOpen: Boolean) => void
   isOpenEditCategoryModal: Boolean
   edited_category: Category
 }
-const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, setIsOpenEditCategoryModal, isOpenEditCategoryModal }) => {
+const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategoryModal, isOpenEditCategoryModal }) => {
   const [formEditCategory] = Form.useForm()
-  const [updateCategory] = useUpdateCategory({
+  const [updateOneCategory] = useUpdateOneCategory({
     refetchQueries: [
       {
-        query: CategoriesAllDocument
+        query: CategoriesDocument
       },
       {
-        query: ProductsAllDocument
+        query: ProductsDocument
       }
     ]
   })
@@ -34,17 +34,17 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
   }, [edited_category])
   useEffect(() => {
     formEditCategory.setFieldsValue({
-      "name": edited_category.name,
-      "icons": edited_category.icons,
-      "images": edited_category.images,
-      "parent": edited_category.parent,
-      "_id": edited_category._id,
+      'name': edited_category.name,
+      'icons': edited_category.icon,
+      'images': edited_category.images,
+      'parent': edited_category.parent,
+      'id': edited_category.id
     })
     return () => {
       formEditCategory.resetFields()
     }
   }, [edited_category, formEditCategory])
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
 
   if (cat_loading) {
     return (<div>Loading...</div>)
@@ -52,23 +52,28 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
   if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { categoriesAll } = cat_data
+  const { categories } = cat_data
 
   // @ts-ignore
-  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
-    return category._id !== REACT_APP_RECYCLE_BIN_ID
-  })
+  // const categoriesAllWithoutRecycleBin = categories?.filter((category: Category) => {
+  //   return category?.id !== REACT_APP_RECYCLE_BIN_ID
+  // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { name, images, icons, parent } = valuefromformlist
-    const _id = String(values?._id)
+    const { name, images, icon, parent } = valuefromformlist
+    const id = Number(values?.id)
 
-    updateCategory({
+    updateOneCategory({
       variables: {
-        _id, name, images, icons, parent
+        data: {
+          name, icon, parent
+        },
+        where: {
+          id
+        }
       }
-    }).then(m => console.log("updateProductMESSAGE:", m))
-      .catch(e => console.log("updateProductERROR:", e))
+    }).then((m: any) => console.log('updateProductMESSAGE:', m))
+      .catch((e: any) => console.log('updateProductERROR:', e))
 
     setIsOpenEditCategoryModal(false)
   }
@@ -83,7 +88,7 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
 
   return (
     <Modal
-      title={`Category information id: ${values._id}`}
+      title={`Category information id: ${values.id}`}
       visible={Boolean(isOpenEditCategoryModal)}
       footer={false}
       onCancel={handleCancel}
@@ -97,15 +102,15 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
 
         <Form.Item
           label="ID category"
-          name="_id"
+          name="id"
           // TODO:
           // @ts-ignore
-          value={String(values?._id)}
-          rules={[{ required: true, message: "Name category is required" }]}
+          value={Number(values?.id)}
+          rules={[{ required: true, message: 'Name category is required' }]}
         >
           <Input
             onChange={handleChange} placeholder="name category"
-            style={{ width: "100%", marginRight: 8 }}/>
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
@@ -114,11 +119,11 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
           // TODO:
           // @ts-ignore
           value={String(values?.name)}
-          rules={[{ required: true, message: "Name category is required" }]}
+          rules={[{ required: true, message: 'Name category is required' }]}
         >
           <Input
             onChange={handleChange} placeholder="name category"
-            style={{ width: "100%", marginRight: 8 }}/>
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
@@ -129,44 +134,46 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
           onChange={handleChange}
         >
           <Select
-            defaultValue={values._id}
+            defaultValue={values.id}
             placeholder="Select category">
-            {categoriesAllWithoutRecycleBin?.map((category: Category) =>
+            {
+              // @ts-ignore
+              categories?.map((category: Category) =>
               <Select.Option
-                key={String(category._id)}
-                value={String(category._id)}
-              >{category._id}
+                key={Number(category.id)}
+                value={Number(category.id)}
+              >{category.id}
               </Select.Option>
             )
             }
           </Select>
         </Form.Item>
 
-        <Form.List name="icons">
+        <Form.List name="icon">
           {(fields, { add, remove }) => {
             return (
               <div>
                 {fields.map((field, index) => (
                   <Form.Item
                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? "icons" : ""}
+                    label={index === 0 ? 'icons' : ''}
                     required={false}
                     key={field.key}
                   >
                     <Form.Item
                       {...field}
-                      validateTrigger={["onChange", "onBlur"]}
+                      validateTrigger={['onChange', 'onBlur']}
                       rules={[
                         {
                           required: true,
                           whitespace: true,
-                          message: "Please input icons url or delete this field."
+                          message: 'Please input icons url or delete this field.'
                         }
                       ]}
                       noStyle
                     >
                       <Input value={values.icons[index]} placeholder="icon url"
-                             style={{ width: "90%", marginRight: 8 }}/>
+                             style={{ width: '90%', marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (
                       <MinusCircleOutlined
@@ -184,7 +191,7 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
                     onClick={() => {
                       add()
                     }}
-                    style={{ width: "80%" }}
+                    style={{ width: '80%' }}
                   >
                     <PlusOutlined/> Add icon url
                   </Button>
@@ -200,24 +207,24 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
                 {fields.map((field, index) => (
                   <Form.Item
                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? "Images" : ""}
+                    label={index === 0 ? 'Images' : ''}
                     required={false}
                     key={field.key}
                   >
                     <Form.Item
                       {...field}
-                      validateTrigger={["onChange", "onBlur"]}
+                      validateTrigger={['onChange', 'onBlur']}
                       rules={[
                         {
                           required: true,
                           whitespace: true,
-                          message: "Please input image url or delete this field."
+                          message: 'Please input image url or delete this field.'
                         }
                       ]}
                       noStyle
                     >
                       <Input value={values.images[index]} placeholder="image url"
-                             style={{ width: "90%", marginRight: 8 }}/>
+                             style={{ width: '90%', marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (
                       <MinusCircleOutlined
@@ -235,7 +242,7 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
                     onClick={() => {
                       add()
                     }}
-                    style={{ width: "80%" }}
+                    style={{ width: '80%' }}
                   >
                     <PlusOutlined/> Add image url
                   </Button>

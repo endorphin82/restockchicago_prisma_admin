@@ -7,7 +7,7 @@ import { setIsOpenAddCategoryModal } from "../../actions"
 import { RootState } from "../../reducer"
 import { ICategories } from "../Categories/types"
 
-import { Category, CategoryCreateInput } from '../../__generated__/types'
+import { Category } from '../../__generated__/types'
 import { CategoriesDocument, useCategories } from '../Categories/queries/__generated__/Categories'
 import { useCreateOneCategory } from '../Categories/mutations/__generated__/CreateOneCategory'
 
@@ -16,7 +16,7 @@ type PropsCategoryAddForm = {
   isOpenAddCategoryModal: Boolean
 }
 
-const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
+const CategoryAddForm: React.FC<any> = (
   {
     setIsOpenAddCategoryModal,
     isOpenAddCategoryModal
@@ -101,9 +101,8 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
     >
       <Form
         name="category" {...formItemLayoutWithOutLabel}
+        // @ts-ignore
         onFinish={onFinish}>
-
-
 
         <Form.Item
           label="Name category"
@@ -133,10 +132,12 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
         >
           <Select
             placeholder="Select category">
-            {categories?.map((category: Category) =>
+            {
+              // @ts-ignore
+              categories?.map((category: Category) =>
               <Select.Option
-                key={String(category.id)}
-                value={String(category.id)}
+                key={Number(category.id)}
+                value={Number(category.id)}
               >{category.id}
               </Select.Option>
             )
