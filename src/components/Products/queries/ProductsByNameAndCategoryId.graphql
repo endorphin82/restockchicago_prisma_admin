@@ -1,4 +1,4 @@
-query ProductsByNameAndCategoryId($name: String!, $category_id: Int!){
+query ProductsByNameAndCategoryId($name: String!, $category_id: Int){
     productsByNameAndCategoryId(name: $name, category_id: $category_id){
         id
         name
@@ -8,7 +8,7 @@ query ProductsByNameAndCategoryId($name: String!, $category_id: Int!){
             id
             url
         }
-        category{
+        categories{
             id
             name
             parent

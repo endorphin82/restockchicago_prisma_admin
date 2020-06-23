@@ -8,7 +8,7 @@ query Products{
             id
             url
         }
-        category{
+        categories{
             id
             name
             parent

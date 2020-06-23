@@ -17,7 +17,7 @@ export type DeleteOneProduct = (
     & { images: Array<(
       { __typename: 'ImageProd' }
       & Pick<Types.ImageProd, 'id' | 'url'>
-    )>, category?: Types.Maybe<(
+    )>, categories: Array<(
       { __typename: 'Category' }
       & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
       & { images: Array<(
@@ -40,7 +40,7 @@ export const DeleteOneProductDocument = gql`
       id
       url
     }
-    category {
+    categories {
       id
       name
       description

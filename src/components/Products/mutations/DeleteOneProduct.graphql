@@ -8,7 +8,7 @@ mutation DeleteOneProduct($where: ProductWhereUniqueInput! ) {
             id
             url
         }
-        category{
+        categories{
             id
             name
             description

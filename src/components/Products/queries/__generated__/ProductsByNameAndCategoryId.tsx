@@ -6,7 +6,7 @@ import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type ProductsByNameAndCategoryIdVariables = {
   name: Types.Scalars['String'];
-  category_id: Types.Scalars['Int'];
+  category_id?: Types.Maybe<Types.Scalars['Int']>;
 };
 
 
@@ -18,7 +18,7 @@ export type ProductsByNameAndCategoryId = (
     & { images: Array<(
       { __typename: 'ImageProd' }
       & Pick<Types.ImageProd, 'id' | 'url'>
-    )>, category?: Types.Maybe<(
+    )>, categories: Array<(
       { __typename: 'Category' }
       & Pick<Types.Category, 'id' | 'name' | 'parent' | 'url' | 'description' | 'icon'>
       & { images: Array<(
@@ -31,7 +31,7 @@ export type ProductsByNameAndCategoryId = (
 
 
 export const ProductsByNameAndCategoryIdDocument = gql`
-    query ProductsByNameAndCategoryId($name: String!, $category_id: Int!) {
+    query ProductsByNameAndCategoryId($name: String!, $category_id: Int) {
   productsByNameAndCategoryId(name: $name, category_id: $category_id) {
     id
     name
@@ -41,7 +41,7 @@ export const ProductsByNameAndCategoryIdDocument = gql`
       id
       url
     }
-    category {
+    categories {
       id
       name
       parent

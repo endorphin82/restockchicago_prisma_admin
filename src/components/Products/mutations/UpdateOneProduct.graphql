@@ -8,7 +8,7 @@ mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUnique
             id
             url
         }
-        category{
+        categories{
             id
             name
             description

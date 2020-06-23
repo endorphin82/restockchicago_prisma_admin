@@ -19,7 +19,7 @@ query Categories{
                 id
                 url
             }
-            category{
+            categories{
                 id
                 name
                 description
