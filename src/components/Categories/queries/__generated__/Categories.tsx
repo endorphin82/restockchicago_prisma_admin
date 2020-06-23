@@ -21,7 +21,7 @@ export type Categories = (
       & { images: Array<(
         { __typename: 'ImageProd' }
         & Pick<Types.ImageProd, 'id' | 'url'>
-      )>, category?: Types.Maybe<(
+      )>, categories: Array<(
         { __typename: 'Category' }
         & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
         & { images: Array<(
@@ -56,7 +56,7 @@ export const CategoriesDocument = gql`
         id
         url
       }
-      category {
+      categories {
         id
         name
         description

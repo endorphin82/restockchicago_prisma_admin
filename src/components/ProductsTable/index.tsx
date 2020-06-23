@@ -55,7 +55,7 @@ const ProductsTable: React.FC<any> = (
     {
       variables: {
         name: searchName as string,
-        category_id: searchCategory as number
+        // category_id: searchCategory as number
       }
     }
   )
@@ -128,7 +128,6 @@ const ProductsTable: React.FC<any> = (
   const handleChange = (value: number) => {
     setSearchCategory(value)
   }
-
 
   return (
     <>

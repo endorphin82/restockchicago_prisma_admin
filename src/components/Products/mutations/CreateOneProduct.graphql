@@ -8,7 +8,7 @@ mutation CreateOneProduct($data: ProductCreateInput! ) {
             id
             url
         }
-        category{
+        categories{
             id
             name
             description

@@ -89,7 +89,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
       categories: [valuefromform?.category]
     }
 
-    const { name, images, price, category, icon } = edited_product
+    const { name, images, price, categories, icon } = edited_product
     // TODO:
     // @ts-ignore
     const id = Number(edited_product.id)
@@ -99,7 +99,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
     // @ts-ignore
     updateOneProduct<PropsUpdateProduct>({
       variables: {
-        id, name, price, category, images, icon
+        id, name, price, categories, images, icon
       }
     }).then((m: any) => {
         console.log('updateProductMESSAGE:', m)

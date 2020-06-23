@@ -8,7 +8,7 @@ query ProductByName($name: String!){
             id
             url
         }
-        category{
+        categories{
             id
             name
             parent

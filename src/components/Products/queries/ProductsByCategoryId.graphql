@@ -8,7 +8,7 @@ query ProductsByCategoryId($category_id: Int!){
             id
             url
         }
-        category{
+        categories{
             id
             name
             parent

@@ -17,6 +17,8 @@ type Category {
 }
 
 type ImageCat {
+    category: Category
+    category_id: Int
     id: Int!
     url: String!
 }
@@ -35,10 +37,11 @@ type Mutation {
     deleteOneProduct(where: ProductWhereUniqueInput!): Product
     updateOneCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
     updateOneProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
+    uploadFile(file: Upload!): String!
 }
 
 type Product {
-    category: Category
+    categories(skip: Int): [Category!]!
     category_id: Int
     description: String
     icon: String!
@@ -57,7 +60,7 @@ type Query {
     productByName(name: String!): Product!
     products(skip: Int): [Product!]!
     productsByCategoryId(category_id: Int!): [Product!]!
-    productsByNameAndCategoryId(category_id: Int!, name: String!): [Product!]!
+    productsByNameAndCategoryId(category_id: Int, name: String!): [Product!]!
 }
 
 input CategoryCreateInput {
@@ -66,13 +69,13 @@ input CategoryCreateInput {
     images: ImageCatCreateManyWithoutCategoryInput
     name: String!
     parent: Int
-    products: ProductCreateManyWithoutCategoryInput
+    products: ProductCreateManyWithoutCategoriesInput
     url: String!
 }
 
-input CategoryCreateOneWithoutProductsInput {
-    connect: CategoryWhereUniqueInput
-    create: CategoryCreateWithoutProductsInput
+input CategoryCreateManyWithoutProductsInput {
+    connect: [CategoryWhereUniqueInput!]
+    create: [CategoryCreateWithoutProductsInput!]
 }
 
 input CategoryCreateWithoutProductsInput {
@@ -84,6 +87,26 @@ input CategoryCreateWithoutProductsInput {
     url: String!
 }
 
+input CategoryFilter {
+    every: CategoryWhereInput
+    none: CategoryWhereInput
+    some: CategoryWhereInput
+}
+
+input CategoryScalarWhereInput {
+    AND: [CategoryScalarWhereInput!]
+    NOT: [CategoryScalarWhereInput!]
+    OR: [CategoryScalarWhereInput!]
+    description: NullableStringFilter
+    icon: StringFilter
+    id: IntFilter
+    images: ImageCatFilter
+    name: StringFilter
+    parent: NullableIntFilter
+    products: ProductFilter
+    url: StringFilter
+}
+
 input CategoryUpdateInput {
     description: String
     icon: String
@@ -91,17 +114,39 @@ input CategoryUpdateInput {
     images: ImageCatUpdateManyWithoutCategoryInput
     name: String
     parent: Int
-    products: ProductUpdateManyWithoutCategoryInput
+    products: ProductUpdateManyWithoutCategoriesInput
     url: String
 }
 
-input CategoryUpdateOneWithoutProductsInput {
-    connect: CategoryWhereUniqueInput
-    create: CategoryCreateWithoutProductsInput
-    delete: Boolean
-    disconnect: Boolean
-    update: CategoryUpdateWithoutProductsDataInput
-    upsert: CategoryUpsertWithoutProductsInput
+input CategoryUpdateManyDataInput {
+    description: String
+    icon: String
+    id: Int
+    name: String
+    parent: Int
+    url: String
+}
+
+input CategoryUpdateManyWithWhereNestedInput {
+    data: CategoryUpdateManyDataInput!
+    where: CategoryScalarWhereInput!
+}
+
+input CategoryUpdateManyWithoutProductsInput {
+    connect: [CategoryWhereUniqueInput!]
+    create: [CategoryCreateWithoutProductsInput!]
+    delete: [CategoryWhereUniqueInput!]
+    deleteMany: [CategoryScalarWhereInput!]
+    disconnect: [CategoryWhereUniqueInput!]
+    set: [CategoryWhereUniqueInput!]
+    update: [CategoryUpdateWithWhereUniqueWithoutProductsInput!]
+    updateMany: [CategoryUpdateManyWithWhereNestedInput!]
+    upsert: [CategoryUpsertWithWhereUniqueWithoutProductsInput!]
+}
+
+input CategoryUpdateWithWhereUniqueWithoutProductsInput {
+    data: CategoryUpdateWithoutProductsDataInput!
+    where: CategoryWhereUniqueInput!
 }
 
 input CategoryUpdateWithoutProductsDataInput {
@@ -114,9 +159,10 @@ input CategoryUpdateWithoutProductsDataInput {
     url: String
 }
 
-input CategoryUpsertWithoutProductsInput {
+input CategoryUpsertWithWhereUniqueWithoutProductsInput {
     create: CategoryCreateWithoutProductsInput!
     update: CategoryUpdateWithoutProductsDataInput!
+    where: CategoryWhereUniqueInput!
 }
 
 input CategoryWhereInput {
@@ -331,7 +377,8 @@ input NullableStringFilter {
 }
 
 input ProductCreateInput {
-    category: CategoryCreateOneWithoutProductsInput
+    categories: CategoryCreateManyWithoutProductsInput
+    category_id: Int
     description: String
     icon: String!
     images: ImageProdCreateManyWithoutProductInput
@@ -340,12 +387,13 @@ input ProductCreateInput {
     url: String!
 }
 
-input ProductCreateManyWithoutCategoryInput {
+input ProductCreateManyWithoutCategoriesInput {
     connect: [ProductWhereUniqueInput!]
-    create: [ProductCreateWithoutCategoryInput!]
+    create: [ProductCreateWithoutCategoriesInput!]
 }
 
-input ProductCreateWithoutCategoryInput {
+input ProductCreateWithoutCategoriesInput {
+    category_id: Int
     description: String
     icon: String!
     images: ImageProdCreateManyWithoutProductInput
@@ -364,6 +412,7 @@ input ProductScalarWhereInput {
     AND: [ProductScalarWhereInput!]
     NOT: [ProductScalarWhereInput!]
     OR: [ProductScalarWhereInput!]
+    categories: CategoryFilter
     category_id: NullableIntFilter
     description: NullableStringFilter
     icon: StringFilter
@@ -375,7 +424,8 @@ input ProductScalarWhereInput {
 }
 
 input ProductUpdateInput {
-    category: CategoryUpdateOneWithoutProductsInput
+    categories: CategoryUpdateManyWithoutProductsInput
+    category_id: Int
     description: String
     icon: String
     id: Int
@@ -386,6 +436,7 @@ input ProductUpdateInput {
 }
 
 input ProductUpdateManyDataInput {
+    category_id: Int
     description: String
     icon: String
     id: Int
@@ -399,24 +450,25 @@ input ProductUpdateManyWithWhereNestedInput {
     where: ProductScalarWhereInput!
 }
 
-input ProductUpdateManyWithoutCategoryInput {
+input ProductUpdateManyWithoutCategoriesInput {
     connect: [ProductWhereUniqueInput!]
-    create: [ProductCreateWithoutCategoryInput!]
+    create: [ProductCreateWithoutCategoriesInput!]
     delete: [ProductWhereUniqueInput!]
     deleteMany: [ProductScalarWhereInput!]
     disconnect: [ProductWhereUniqueInput!]
     set: [ProductWhereUniqueInput!]
-    update: [ProductUpdateWithWhereUniqueWithoutCategoryInput!]
+    update: [ProductUpdateWithWhereUniqueWithoutCategoriesInput!]
     updateMany: [ProductUpdateManyWithWhereNestedInput!]
-    upsert: [ProductUpsertWithWhereUniqueWithoutCategoryInput!]
+    upsert: [ProductUpsertWithWhereUniqueWithoutCategoriesInput!]
 }
 
-input ProductUpdateWithWhereUniqueWithoutCategoryInput {
-    data: ProductUpdateWithoutCategoryDataInput!
+input ProductUpdateWithWhereUniqueWithoutCategoriesInput {
+    data: ProductUpdateWithoutCategoriesDataInput!
     where: ProductWhereUniqueInput!
 }
 
-input ProductUpdateWithoutCategoryDataInput {
+input ProductUpdateWithoutCategoriesDataInput {
+    category_id: Int
     description: String
     icon: String
     id: Int
@@ -426,9 +478,9 @@ input ProductUpdateWithoutCategoryDataInput {
     url: String
 }
 
-input ProductUpsertWithWhereUniqueWithoutCategoryInput {
-    create: ProductCreateWithoutCategoryInput!
-    update: ProductUpdateWithoutCategoryDataInput!
+input ProductUpsertWithWhereUniqueWithoutCategoriesInput {
+    create: ProductCreateWithoutCategoriesInput!
+    update: ProductUpdateWithoutCategoriesDataInput!
     where: ProductWhereUniqueInput!
 }
 
@@ -436,7 +488,7 @@ input ProductWhereInput {
     AND: [ProductWhereInput!]
     NOT: [ProductWhereInput!]
     OR: [ProductWhereInput!]
-    category: CategoryWhereInput
+    categories: CategoryFilter
     category_id: NullableIntFilter
     description: NullableStringFilter
     icon: StringFilter
@@ -468,3 +520,7 @@ input StringFilter {
     notIn: [String!]
     startsWith: String
 }
+
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
