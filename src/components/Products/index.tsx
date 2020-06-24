@@ -18,7 +18,6 @@ const Products: React.FC<any> = ({ setIsOpenAddProductModal, clearEditProduct })
     setIsOpenAddProductModal(true)
   }
 
-
   return (
     <>
       <h1>Products</h1>
