@@ -36,7 +36,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
       'price': edited_product.price,
       'images': edited_product.images,
       'icon': edited_product.icon,
-      'category_id': edited_product.category_id
+      // 'category_id': edited_product.category_id
     })
     return () => {
       formEditProduct.resetFields()
@@ -47,7 +47,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
     const { name, images, icon } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
-    const category_id = Number(valuefromformlist.category_id)
+    // const category_id = Number(valuefromformlist.category_id)
 
     updateProduct({
       variables: {
@@ -130,7 +130,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
             placeholder="Select category">
             {categories?.map((category) =>
               <Select.Option
-                defaultValue={Number(edited_product?.category_id)}
+                // defaultValue={Number(edited_product?.category_id)}
                 key={Number(category?.id)}
                 value={Number(category?.id)}
               >{String(category?.name)}

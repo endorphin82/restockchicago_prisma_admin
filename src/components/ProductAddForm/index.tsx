@@ -15,7 +15,6 @@ import { IProductsByNameAndCategoryId } from "../Products/types"
 import { useCreateOneProduct } from "../Products/mutations/__generated__/CreateOneProduct"
 import { useCategories } from "../Categories/queries/__generated__/Categories"
 
-
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
   isOpenAddProductModal: Boolean
@@ -88,7 +87,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
         data:{
           name,
           price,
-          category_id: valuefromformlist.category_id,
+          // categoryies: valuefromformlist.categoryies,
           // @ts-ignore
           images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
           icon

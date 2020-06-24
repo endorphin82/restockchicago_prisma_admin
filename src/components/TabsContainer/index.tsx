@@ -1,23 +1,26 @@
-import React from "react"
-import { Empty, Tabs } from "antd"
-import Products from "../Products"
+import React from 'react'
+import { Empty, Tabs } from 'antd'
+import Products from '../Products'
 
-import Categories from "../Categories"
+import Categories from '../Categories'
 
-import { connect } from "react-redux"
-import { categoriesList } from "../../actions"
+import { connect } from 'react-redux'
+import { categoriesList } from '../../actions'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { useProducts } from '../Products/queries/__generated__/Products'
+import { Category } from '../../__generated__/types'
 
 const { TabPane } = Tabs
 
 function callback(key: any) {
   console.log(key)
 }
-// interface Props {
-//   categoriesList: (categories: String[] | undefined) => void
-// }
-const TabsContainer = () => {
+
+interface Props {
+  categoriesList: (categories: Category[] | undefined) => void
+}
+
+const TabsContainer: React.FC<any> = ({ categoriesList }) => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProducts()
 
@@ -31,7 +34,8 @@ const TabsContainer = () => {
   //     _id: REACT_APP_RECYCLE_BIN_ID
   //   }
   // })
-  if (cat_loading || prod_loading ) {
+
+  if (cat_loading || prod_loading) {
     return (<div>Loading...</div>)
   }
   if (cat_error || prod_error || !cat_data || !prod_data) {
@@ -49,7 +53,7 @@ const TabsContainer = () => {
   // }).filter(Boolean)
 
   categoriesList(categories)
-
+  console.log('categoriesList(categories)', categories)
   return (
     <Tabs defaultActiveKey="1" onChange={callback}>
       <Tabs.TabPane tab="Products" key="1">

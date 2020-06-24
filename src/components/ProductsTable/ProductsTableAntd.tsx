@@ -34,20 +34,22 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       }
     },
     {
-      title: 'Category',
+      title: 'Categories',
       dataIndex: 'categories',
       key: 'categories',
       render: (categories: Category[]) => {
-        return (categories) ? <span>
+        return (categories) ?
+          (<span>
             {
               categories
-                .map((category, index) => <span>
-            <Tag color="blue" key={String(category?.name)}>
-              {category?.name}
-            </Tag>
-        </span>)
+                .map((category) =>
+                  <span>
+                    <Tag color="blue" key={String(category?.name)}>
+                      {category?.name}
+                    </Tag>
+                  </span>)
             }
-          </span> : <span>no cat</span>
+          </span>) : (<span>no cat</span>)
       }
     },
     {

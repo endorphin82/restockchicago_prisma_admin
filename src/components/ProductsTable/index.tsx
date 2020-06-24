@@ -16,6 +16,7 @@ import {
   useProductsByNameAndCategoryId
 } from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
+import ProductsSelectByCategory from '../ProductsSelectByCategory'
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
@@ -133,7 +134,7 @@ const ProductsTable: React.FC<any> = (
     <>
       <ProductsSearch handleEnterSearch={handleEnterSearch}
                       handleSearch={handleSearch}/>
-      {/*<ProductsSelectByCategory handleChange={handleChange}/>*/}
+      <ProductsSelectByCategory handleChange={handleChange}/>
 
       <ProductsTableAntd
         // @ts-ignore

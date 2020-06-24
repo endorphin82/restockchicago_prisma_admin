@@ -24,12 +24,18 @@ export type Category = {
 
 
 export type CategoryProductsArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<ProductWhereUniqueInput>;
+  after?: Maybe<ProductWhereUniqueInput>;
 };
 
 
 export type CategoryImagesArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<ImageCatWhereUniqueInput>;
+  after?: Maybe<ImageCatWhereUniqueInput>;
 };
 
 export type CategoryCreateInput = {
@@ -417,26 +423,30 @@ export type Product = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   icon: Scalars['String'];
-  category_id?: Maybe<Scalars['Int']>;
   price: Scalars['Int'];
   images: Array<ImageProd>;
 };
 
 
 export type ProductCategoriesArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<CategoryWhereUniqueInput>;
+  after?: Maybe<CategoryWhereUniqueInput>;
 };
 
 
 export type ProductImagesArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<ImageProdWhereUniqueInput>;
+  after?: Maybe<ImageProdWhereUniqueInput>;
 };
 
 export type ProductCreateInput = {
   name: Scalars['String'];
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   price: Scalars['Int'];
   icon: Scalars['String'];
   categories?: Maybe<CategoryCreateManyWithoutProductsInput>;
@@ -452,7 +462,6 @@ export type ProductCreateWithoutCategoriesInput = {
   name: Scalars['String'];
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   price: Scalars['Int'];
   icon: Scalars['String'];
   images?: Maybe<ImageProdCreateManyWithoutProductInput>;
@@ -469,7 +478,6 @@ export type ProductScalarWhereInput = {
   name?: Maybe<StringFilter>;
   url?: Maybe<StringFilter>;
   description?: Maybe<NullableStringFilter>;
-  category_id?: Maybe<NullableIntFilter>;
   price?: Maybe<IntFilter>;
   categories?: Maybe<CategoryFilter>;
   images?: Maybe<ImageProdFilter>;
@@ -484,7 +492,6 @@ export type ProductUpdateInput = {
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   price?: Maybe<Scalars['Int']>;
   icon?: Maybe<Scalars['String']>;
   categories?: Maybe<CategoryUpdateManyWithoutProductsInput>;
@@ -496,7 +503,6 @@ export type ProductUpdateManyDataInput = {
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   price?: Maybe<Scalars['Int']>;
   icon?: Maybe<Scalars['String']>;
 };
@@ -523,7 +529,6 @@ export type ProductUpdateWithoutCategoriesDataInput = {
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   price?: Maybe<Scalars['Int']>;
   icon?: Maybe<Scalars['String']>;
   images?: Maybe<ImageProdUpdateManyWithoutProductInput>;
@@ -545,7 +550,6 @@ export type ProductWhereInput = {
   name?: Maybe<StringFilter>;
   url?: Maybe<StringFilter>;
   description?: Maybe<NullableStringFilter>;
-  category_id?: Maybe<NullableIntFilter>;
   price?: Maybe<IntFilter>;
   categories?: Maybe<CategoryFilter>;
   images?: Maybe<ImageProdFilter>;
@@ -559,7 +563,6 @@ export type ProductWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
-  category_id?: Maybe<Scalars['Int']>;
   icon?: Maybe<Scalars['String']>;
 };
 
@@ -582,7 +585,10 @@ export type QueryCategoryArgs = {
 
 
 export type QueryCategoriesArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<CategoryWhereUniqueInput>;
+  after?: Maybe<CategoryWhereUniqueInput>;
 };
 
 
@@ -592,7 +598,10 @@ export type QueryProductArgs = {
 
 
 export type QueryProductsArgs = {
-  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<ProductWhereUniqueInput>;
+  after?: Maybe<ProductWhereUniqueInput>;
 };
 
 
