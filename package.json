@@ -23,7 +23,7 @@
     "@types/react-redux": "^7.1.7",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
-    "antd": "^4.0.4",
+    "antd": "^4.3.5",
     "apollo": "^2.26.0",
     "apollo-boost": "^0.4.7",
     "apollo-cache-inmemory": "^1.6.5",
