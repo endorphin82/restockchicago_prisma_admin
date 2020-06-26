@@ -23,7 +23,7 @@ const Products: React.FC<any> = ({ setIsOpenAddProductModal, clearEditProduct })
       <h1>Products</h1>
 
       <ProductsTable/>
-      {/*<ProductEditForm/>*/}
+      <ProductEditForm/>
       {/*<ProductAddForm/>*/}
       <Tooltip title="Add Product">
         <Button onClick={onClickHandler} type="dashed" shape="circle"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, Modal, Select } from 'antd'
+import { Upload, message, Button, Form, Input, Modal, Select } from 'antd'
 import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
 import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
 import { connect } from 'react-redux'
@@ -7,9 +7,20 @@ import { clearEditProduct, setIsOpenEditProductModal } from '../../actions'
 import { priceStringToIntCent } from '../../utils/utils'
 import { RootState } from '../../reducer'
 import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
-import { Product } from '../../__generated__/types'
+import {  Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
+import { UploadOutlined } from '@ant-design/icons'
+import { useUploadFile } from '../Products/mutations/__generated__/UploadFile'
+import { Mutation } from 'react-apollo';
+import Dropzone from 'react-dropzone'
+import gql from 'graphql-tag';
+
+const uploadFileMutation = gql`
+    mutation($file: Upload!) {
+        uploadFile(file: $file)
+    }
+`;
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -18,7 +29,7 @@ interface PropsProductEditForm {
   isOpenEditProductModal: Boolean
 }
 
-const ProductEditForm: React.FC<PropsProductEditForm> = (
+const ProductEditForm: React.FC<any> = (
   {
     clearEditProduct, edited_product,
     isOpenEditProductModal, setIsOpenEditProductModal
@@ -35,14 +46,13 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
       'name': edited_product.name,
       'price': edited_product.price,
       'images': edited_product.images,
-      'icon': edited_product.icon,
+      'icon': edited_product.icon
       // 'category_id': edited_product.category_id
     })
     return () => {
       formEditProduct.resetFields()
     }
   }, [edited_product, formEditProduct])
-
   const onFinish = (valuefromformlist: Product) => {
     const { name, images, icon } = valuefromformlist
     const id = Number(values?.id)
@@ -139,7 +149,21 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
             }
           </Select>
         </Form.Item>
-
+        {/*<Mutation mutation={uploadFileMutation}>*/}
+        {/*  {(mutate: any) => (*/}
+        {/*    // @ts-ignore*/}
+        {/*    <Dropzone*/}
+        {/*      onDrop={*/}
+        {/*        ([file]: any) => {*/}
+        {/*          console.log(file);*/}
+        {/*          return mutate({ variables: { file } });*/}
+        {/*        }*/}
+        {/*      }*/}
+        {/*    >*/}
+        {/*      /!*<p></p>*!/*/}
+        {/*    </Dropzone>*/}
+        {/*  )}*/}
+        {/*</Mutation>*/}
         <Form.List name="images">
           {(fields, { add, remove }) => {
             return (
@@ -191,6 +215,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = (
             )
           }}
         </Form.List>
+
         <Form.Item
           label="Icon"
           name="icon"
