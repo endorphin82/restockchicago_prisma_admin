@@ -20,14 +20,14 @@ export const editCategory = (category: Category) => ({
   payload: category
 } as const)
 
-export const categoriesList = (categories: String[] | []) => ({
+export const categoriesList = (categories: Category[] | []) => ({
   type: CATEGORIES_LIST,
   payload: categories
 } as const)
 
-export const setSearchCategories = (searchCtegories: String[] | [] | undefined) => ({
+export const setSearchCategories = (searchCategories: Category[] | [] | undefined) => ({
   type: SEARCH_CATEGORIES_LIST,
-  payload: searchCtegories
+  payload: searchCategories
 } as const)
 
 export const setSearchName = (searchName: String | void | undefined) => ({

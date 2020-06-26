@@ -1,26 +1,26 @@
-import React from "react"
-import { Select } from "antd"
-import { RootState } from "../../reducer"
-import { connect } from "react-redux"
+import React from 'react'
+import { Select } from 'antd'
+import { RootState } from '../../reducer'
+import { connect } from 'react-redux'
 import { Category } from '../../__generated__/types'
 
 const { Option } = Select
 
 interface Props {
-  categories: String[] | [] | any
+  categories: Category[] | [] | any
   handleChange: (e: any) => any
-  searchCategories: String[] | [] | undefined
+  searchCategories: Category[] | [] | undefined
 }
 
-const ProductsSelectByCategory: React.FC<any> = ({ categories, handleChange, searchCategories }) => {
-  console.log("categories",categories)
+const ProductsSelectByCategories: React.FC<any> = ({ categories, handleChange, searchCategories }) => {
+  console.log('categories', categories)
 
   return (
     <Select
       mode="multiple"
       // @ts-ignore
-      defaultValue={searchCategories.length === categories.length ? [] : searchCategories}
-      style={{ width: "30%" }}
+      defaultValue={searchCategories.length === categories.length ? [] : searchCategories.map(c => c.id)}
+      style={{ width: '30%' }}
       placeholder="Please select categories"
       // @ts-ignore
       onChange={(value: Number[]) => {
@@ -33,8 +33,9 @@ const ProductsSelectByCategory: React.FC<any> = ({ categories, handleChange, sea
     >
       {categories?.map((cat: Category) => {
           // @ts-ignore
-        return <Option
+          return <Option
             // @ts-ignore
+            value={cat.id}
             key={cat?.id}>
             {cat?.name}
           </Option>
@@ -55,7 +56,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   searchCategories: state.search_categories_list.searchCategories
 })
 
-export default connect<typeof ProductsSelectByCategory>(
+export default connect<typeof ProductsSelectByCategories>(
 // @ts-ignore
   mapStateToProps
-)(ProductsSelectByCategory)
+)(ProductsSelectByCategories)

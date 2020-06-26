@@ -8,7 +8,7 @@ import {
 } from '../../actions'
 import ProductsTableAntd from './ProductsTableAntd'
 
-import { Product } from '../../__generated__/types'
+import { Category, Product } from '../../__generated__/types'
 import ProductsSearch from '../ProductsSearch'
 
 import { RootState } from '../../reducer'
@@ -16,14 +16,15 @@ import {
   useProductsByNameAndCategoryId
 } from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
-import ProductsSelectByCategory from '../ProductsSelectByCategory'
+import ProductsSelectByCategories from '../ProductsSelectByCategories'
+
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
-  setSearchCategory: (searchCtegory: Number | Number[] | [] | undefined) => void
+  setSearchCategories: (searchCategories: Number | Category[] | [] | undefined) => void
   setSearchName: (searchName: String | void | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
-  categories: String[] | [] | any
+  categories: Category[] | [] | any
   searchName: String | void | undefined
   searchCategory: Number | Number[] | [] | undefined
 }
@@ -31,7 +32,7 @@ interface PropsProductsTable {
 const ProductsTable: React.FC<any> = (
   {
     categories, editProduct, setIsOpenEditProductModal, setSearchCategory,
-    setSearchName, searchName, searchCategory
+    setSearchName, searchName, searchCategories
   }) => {
 
   // const [updateOneProduct] = useUpdateOneProduct(
@@ -55,7 +56,7 @@ const ProductsTable: React.FC<any> = (
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryId(
     {
       variables: {
-        name: searchName as string,
+        name: searchName as string
         // category_id: searchCategory as number
       }
     }
@@ -64,9 +65,9 @@ const ProductsTable: React.FC<any> = (
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
 
-  // useEffect(() => {
-  //   setSearchCategory(categories)
-  // }, [categories])
+  useEffect(() => {
+    setSearchCategories(categories)
+  }, [categories])
 
   console.log('productDeleted', productDeleted)
 
@@ -126,15 +127,15 @@ const ProductsTable: React.FC<any> = (
     }
   }
 
-  const handleChange = (value: number) => {
-    setSearchCategory(value)
+  const handleChange = (value: Category[]) => {
+    setSearchCategories(value)
   }
 
   return (
     <>
       <ProductsSearch handleEnterSearch={handleEnterSearch}
                       handleSearch={handleSearch}/>
-      <ProductsSelectByCategory handleChange={handleChange}/>
+      <ProductsSelectByCategories handleChange={handleChange}/>
 
       <ProductsTableAntd
         // @ts-ignore
@@ -156,7 +157,7 @@ const ProductsTable: React.FC<any> = (
 interface StateProps {
   categories: String[]
   searchName: String
-  searchCategories: String[]
+  searchCategories: Category[]
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
