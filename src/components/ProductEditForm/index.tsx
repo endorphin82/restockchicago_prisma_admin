@@ -7,20 +7,20 @@ import { clearEditProduct, setIsOpenEditProductModal } from '../../actions'
 import { priceStringToIntCent } from '../../utils/utils'
 import { RootState } from '../../reducer'
 import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
-import {  Product } from '../../__generated__/types'
+import { Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
 import { useUploadFile } from '../Products/mutations/__generated__/UploadFile'
-import { Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo'
 import Dropzone from 'react-dropzone'
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 const uploadFileMutation = gql`
-    mutation($file: Upload!) {
-        uploadFile(file: $file)
-    }
-`;
+  mutation($file: Upload!) {
+    uploadFile(file: $file)
+  }
+`
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -149,21 +149,7 @@ const ProductEditForm: React.FC<any> = (
             }
           </Select>
         </Form.Item>
-        {/*<Mutation mutation={uploadFileMutation}>*/}
-        {/*  {(mutate: any) => (*/}
-        {/*    // @ts-ignore*/}
-        {/*    <Dropzone*/}
-        {/*      onDrop={*/}
-        {/*        ([file]: any) => {*/}
-        {/*          console.log(file);*/}
-        {/*          return mutate({ variables: { file } });*/}
-        {/*        }*/}
-        {/*      }*/}
-        {/*    >*/}
-        {/*      /!*<p></p>*!/*/}
-        {/*    </Dropzone>*/}
-        {/*  )}*/}
-        {/*</Mutation>*/}
+
         <Form.List name="images">
           {(fields, { add, remove }) => {
             return (

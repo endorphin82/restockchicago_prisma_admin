@@ -18,7 +18,7 @@ export type Category = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   products: Array<Product>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   images: Array<ImageCat>;
 };
 
@@ -43,7 +43,7 @@ export type CategoryCreateInput = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['Int']>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   products?: Maybe<ProductCreateManyWithoutCategoriesInput>;
   images?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
 };
@@ -58,7 +58,7 @@ export type CategoryCreateWithoutProductsInput = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['Int']>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   images?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
 };
 
@@ -76,7 +76,7 @@ export type CategoryScalarWhereInput = {
   parent?: Maybe<NullableIntFilter>;
   products?: Maybe<ProductFilter>;
   images?: Maybe<ImageCatFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   AND?: Maybe<Array<CategoryScalarWhereInput>>;
   OR?: Maybe<Array<CategoryScalarWhereInput>>;
   NOT?: Maybe<Array<CategoryScalarWhereInput>>;
@@ -148,7 +148,7 @@ export type CategoryWhereInput = {
   parent?: Maybe<NullableIntFilter>;
   products?: Maybe<ProductFilter>;
   images?: Maybe<ImageCatFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   AND?: Maybe<Array<CategoryWhereInput>>;
   OR?: Maybe<Array<CategoryWhereInput>>;
   NOT?: Maybe<Array<CategoryWhereInput>>;
@@ -158,7 +158,14 @@ export type CategoryWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
+};
+
+export type File = {
+  __typename?: 'File';
+  uid: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type ImageCat = {
@@ -350,6 +357,7 @@ export type Mutation = {
   createOneProduct: Product;
   updateOneProduct?: Maybe<Product>;
   deleteOneProduct?: Maybe<Product>;
+  uploadFiles: Array<File>;
   uploadFile: Scalars['String'];
 };
 
@@ -386,8 +394,15 @@ export type MutationDeleteOneProductArgs = {
 };
 
 
+export type MutationUploadFilesArgs = {
+  files: Array<Scalars['Upload']>;
+  product_id?: Maybe<Scalars['Int']>;
+};
+
+
 export type MutationUploadFileArgs = {
   file: Scalars['Upload'];
+  product_id?: Maybe<Scalars['Int']>;
 };
 
 export type NullableIntFilter = {
@@ -422,7 +437,7 @@ export type Product = {
   categories: Array<Category>;
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   price: Scalars['Int'];
   images: Array<ImageProd>;
 };
@@ -448,7 +463,7 @@ export type ProductCreateInput = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   price: Scalars['Int'];
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   categories?: Maybe<CategoryCreateManyWithoutProductsInput>;
   images?: Maybe<ImageProdCreateManyWithoutProductInput>;
 };
@@ -463,7 +478,7 @@ export type ProductCreateWithoutCategoriesInput = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   price: Scalars['Int'];
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   images?: Maybe<ImageProdCreateManyWithoutProductInput>;
 };
 
@@ -481,7 +496,7 @@ export type ProductScalarWhereInput = {
   price?: Maybe<IntFilter>;
   categories?: Maybe<CategoryFilter>;
   images?: Maybe<ImageProdFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   AND?: Maybe<Array<ProductScalarWhereInput>>;
   OR?: Maybe<Array<ProductScalarWhereInput>>;
   NOT?: Maybe<Array<ProductScalarWhereInput>>;
@@ -553,7 +568,7 @@ export type ProductWhereInput = {
   price?: Maybe<IntFilter>;
   categories?: Maybe<CategoryFilter>;
   images?: Maybe<ImageProdFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   AND?: Maybe<Array<ProductWhereInput>>;
   OR?: Maybe<Array<ProductWhereInput>>;
   NOT?: Maybe<Array<ProductWhereInput>>;
@@ -563,7 +578,6 @@ export type ProductWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
