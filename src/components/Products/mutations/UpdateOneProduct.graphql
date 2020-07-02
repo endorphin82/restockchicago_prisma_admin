@@ -1,24 +1,24 @@
 mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUniqueInput!) {
-    updateOneProduct(data: $data, where: $where){
-        id
-        name
-        price
-        icon
-        images{
-            id
-            url
-        }
-        categories{
-            id
-            name
-            description
-            url
-            parent
-            icon
-            images{
-                id
-                url
-            }
-        }
+  updateOneProduct(data: $data, where: $where){
+    id
+    name
+    price
+    icon
+    images{
+      id
+      url
     }
+    categories{
+      id
+      name
+      description
+      url
+      parent
+      icon
+      images{
+        id
+        url
+      }
+    }
+  }
 }
