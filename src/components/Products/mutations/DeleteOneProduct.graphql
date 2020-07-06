@@ -4,6 +4,7 @@ mutation DeleteOneProduct($where: ProductWhereUniqueInput! ) {
         name
         price
         icon
+        img
         images{
             id
             url

@@ -5,6 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CreateOneProductVariables = {
+  files?: Types.Maybe<Array<Types.Scalars['Upload']>>;
   data: Types.ProductCreateInput;
 };
 
@@ -30,8 +31,8 @@ export type CreateOneProduct = (
 
 
 export const CreateOneProductDocument = gql`
-    mutation CreateOneProduct($data: ProductCreateInput!) {
-  createOneProduct(data: $data) {
+    mutation CreateOneProduct($files: [Upload!], $data: ProductCreateInput!) {
+  createOneProduct(files: $files, data: $data) {
     id
     name
     price
@@ -70,6 +71,7 @@ export type CreateOneProductMutationFn = ApolloReactCommon.MutationFunction<Crea
  * @example
  * const [createOneProduct, { data, loading, error }] = useCreateOneProduct({
  *   variables: {
+ *      files: // value for 'files'
  *      data: // value for 'data'
  *   },
  * });
