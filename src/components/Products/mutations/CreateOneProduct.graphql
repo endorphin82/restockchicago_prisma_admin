@@ -1,13 +1,10 @@
-mutation CreateOneProduct($data: ProductCreateInput! ) {
-    createOneProduct(data: $data ){
+mutation CreateOneProduct( $files: [Upload!], $data: ProductCreateInput! ) {
+    createOneProduct( files: $files, data: $data ){
         id
         name
         price
         icon
-        images{
-            id
-            url
-        }
+        img
         categories{
             id
             name
