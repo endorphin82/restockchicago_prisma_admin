@@ -24,7 +24,7 @@ const Products: React.FC<any> = ({ setIsOpenAddProductModal, clearEditProduct })
 
       <ProductsTable/>
       <ProductEditForm/>
-      {/*<ProductAddForm/>*/}
+      <ProductAddForm/>
       <Tooltip title="Add Product">
         <Button onClick={onClickHandler} type="dashed" shape="circle"
                 style={{ position: 'fixed', bottom: '50px', right: '50px', color: '#08c' }}

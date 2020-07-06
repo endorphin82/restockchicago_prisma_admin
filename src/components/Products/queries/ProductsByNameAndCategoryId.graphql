@@ -4,6 +4,7 @@ query ProductsByNameAndCategoryId($name: String!, $category_id: Int){
         name
         price
         icon
+        img
         images{
             id
             url

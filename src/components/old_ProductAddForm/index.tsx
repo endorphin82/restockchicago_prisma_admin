@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { Button, Form, Input, Modal, Select, Upload } from 'antd'
-import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
-import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
-import { setIsOpenAddProductModal } from '../../actions'
-import { priceStringToIntCent } from '../../utils/utils'
+import React, { useState } from "react"
+import { connect } from "react-redux"
+import { Button, Form, Input, Modal, Select } from "antd"
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
+import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
+import { setIsOpenAddProductModal } from "../../actions"
+import { priceStringToIntCent } from "../../utils/utils"
 import {
   REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
-} from '../../actions/types'
-import { RootState } from '../../reducer'
-import { Product } from '../../__generated__/types'
+} from "../../actions/types"
+import { RootState } from "../../reducer"
+import { Product } from "../../__generated__/types"
 import { ProductsByNameAndCategoryIdDocument } from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
-import { IProductsByNameAndCategoryId } from '../Products/types'
-import { useCreateOneProduct } from '../Products/mutations/__generated__/CreateOneProduct'
-import { useCategories } from '../Categories/queries/__generated__/Categories'
-import { UploadOutlined } from '@ant-design/icons/lib'
+import { IProductsByNameAndCategoryId } from "../Products/types"
+import { useCreateOneProduct } from "../Products/mutations/__generated__/CreateOneProduct"
+import { useCategories } from "../Categories/queries/__generated__/Categories"
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
@@ -23,8 +22,7 @@ type PropsProductAddForm = {
   searchCategories: String[] | [] | undefined
 }
 
-const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
-  const [fileList, setFileList] = useState<any>([])
+const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
   const [createOneProduct] = useCreateOneProduct(
     {
       // TODO:
@@ -75,33 +73,28 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [values, setValues] = useState<Product | any>({})
-  console.log('values+++', values)
+  console.log("values+++", values)
 
   const onFinish = (valuefromformlist: Product) => {
-    console.log('Received values of form:', values)
-    const formData = new FormData()
-    fileList.forEach((file: any) => {
-      formData.append('files[]', file)
-    })
+    console.log("Received values of form:", values)
+
     const { name, icon } = values
     const price = priceStringToIntCent(values.price)
-    console.log('onFinish')
+    console.log("onFinish")
 
     createOneProduct({
       variables: {
-        files: fileList,
-        data: {
+        data:{
           name,
           price,
           // categoryies: valuefromformlist.categoryies,
           // @ts-ignore
-          images: [],
-          // images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
+          images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
           icon
         }
       }
-    }).then(m => console.log('createOneProduct:', m))
-      .catch(e => console.log('addProductERROR:', e))
+    }).then(m => console.log("createOneProduct:", m))
+      .catch(e => console.log("addProductERROR:", e))
 
     setIsOpenAddProductModal(false)
   }
@@ -112,12 +105,12 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
 
   const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
-    console.log('target', e.target)
+    console.log("target", e.target)
     setValues({ ...values, [name]: value })
   }
 
   const handleChangeSelect = (value: string) => {
-    setValues({ ...values, 'categories': value })
+    setValues({ ...values, "categoryId": value })
   }
 
   if (cat_loading) {
@@ -130,32 +123,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
   // const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
   //   return category?._id !== REACT_APP_RECYCLE_BIN_ID
   // })
-  /*
-  const normFile = (e: any) => {
-    console.log('Upload event:', e)
-    if (Array.isArray(e)) {
-      return e
-    }
-    setFileList(e && e.fileList)
-
-    return e && e.fileList
-  }
-*/
-
-  const propsUpload = {
-    multiple: true,
-    beforeUpload: (file: any) => {
-      setFileList((fileList: any[]) => [...fileList, file])
-      return false
-    },
-    onRemove: (file: any) => {
-      const index = fileList.indexOf(file)
-      const newFileList = fileList.slice()
-      newFileList.splice(index, 1)
-      setFileList([...newFileList])
-    },
-    fileList
-  }
+  console.log("isOpenAddProductModal", isOpenAddProductModal)
 
   return (
     <Modal
@@ -171,28 +139,28 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
         onFinish={onFinish}>
         <Form.Item
           label="Name product"
-          rules={[{ required: true, message: 'Name product is required' }]}
+          rules={[{ required: true, message: "Name product is required" }]}
         >
           <Input
             name="name"
             onChange={handleChange} placeholder="name product"
-            style={{ width: '100%', marginRight: 8 }}/>
+            style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Price"
-          rules={[{ required: true, message: 'Price is required' }]}
+          rules={[{ required: true, message: "Price is required" }]}
         >
           <Input
             name="price"
             onChange={handleChange}
-            type="number" placeholder="Price $" style={{ width: '100%', marginRight: 8 }}/>
+            type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
           label="Category"
           name="categories"
           // noStyle
-          rules={[{ required: true, message: 'Category is required' }]}
+          rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
             onChange={handleChangeSelect}
@@ -203,33 +171,71 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
                 key={String(category?.id)}
                 value={String(category?.id)}
                 onChange={handleChange}
-              >{String(category?.name)}
+              >{String(category?.id)}
               </Select.Option>
             )
             }
           </Select>
         </Form.Item>
 
-        <Form.Item
-          {...propsUpload}
-          label="files"
-          name="files"
-          valuePropName="fileList"
-          // getValueFromEvent={normFile}
-        >
-          <Upload {...propsUpload} listType="picture">
-            <Button>
-              <UploadOutlined/> Select Files
-            </Button>
-          </Upload>
-        </Form.Item>
+        <Form.List name="images">
+          {(fields, { add, remove }) => {
+            return (
+              <div>
+                {fields.map((field, index) => (
+                  <Form.Item
+                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                    label={index === 0 ? "Images" : ""}
+                    required={false}
+                    key={field.key}
+                  >
+                    <Form.Item
+                      {...field}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: "Please input image url or delete this field."
+                        }
+                      ]}
+                      noStyle
+                    >
+                      <Input
+                        style={{ width: "90%", marginRight: 8 }}/>
+                    </Form.Item>
 
+                    {(fields.length >= 1) ? (
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        onClick={() => {
+                          remove(field.name)
+                        }}
+                      />
+                    ) : <span/>}
+                  </Form.Item>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add()
+                    }}
+                    style={{ width: "80%" }}
+                  >
+                    <PlusOutlined/> Add image url
+                  </Button>
+                </Form.Item>
+              </div>
+            )
+          }}
+        </Form.List>
         <Form.Item
           label="Icon"
           name="icon"
           // noStyle
         >
-          <Input onChange={handleChange} placeholder="icon url" style={{ width: '100%', marginRight: 8 }}/>
+          <Input onChange={handleChange} placeholder="icon url" style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Button type="primary" htmlType="submit">
           Submit
