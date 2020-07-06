@@ -4,6 +4,7 @@ query ProductsByCategoryId($category_id: Int!){
         name
         price
         icon
+        img
         images{
             id
             url

@@ -13,7 +13,7 @@ export type ProductByName = (
   { __typename: 'Query' }
   & { productByName: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon'>
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     & { images: Array<(
       { __typename: 'ImageProd' }
       & Pick<Types.ImageProd, 'id' | 'url'>
@@ -36,6 +36,7 @@ export const ProductByNameDocument = gql`
     name
     price
     icon
+    img
     images {
       id
       url

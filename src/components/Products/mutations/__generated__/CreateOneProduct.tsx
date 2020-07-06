@@ -14,11 +14,8 @@ export type CreateOneProduct = (
   { __typename: 'Mutation' }
   & { createOneProduct: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon'>
-    & { images: Array<(
-      { __typename: 'ImageProd' }
-      & Pick<Types.ImageProd, 'id' | 'url'>
-    )>, categories: Array<(
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+    & { categories: Array<(
       { __typename: 'Category' }
       & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
       & { images: Array<(
@@ -37,10 +34,7 @@ export const CreateOneProductDocument = gql`
     name
     price
     icon
-    images {
-      id
-      url
-    }
+    img
     categories {
       id
       name

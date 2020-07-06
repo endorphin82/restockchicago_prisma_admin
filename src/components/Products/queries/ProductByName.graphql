@@ -4,6 +4,7 @@ query ProductByName($name: String!){
         name
         price
         icon
+        img
         images{
             id
             url
