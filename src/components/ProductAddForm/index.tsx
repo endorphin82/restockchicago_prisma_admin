@@ -118,14 +118,16 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
     setValues({ ...values, [name]: value })
   }
 
-  // const handleChangeSelect = (value: string[]) => {
-  //   const val = value.map((v: any) => {
-  //     return {
-  //       connect: Object.assign({}, { id:  Number(v) })
-  //     }
-  //   })
-  //   setValues({ ...values, 'categories': val })
-  // }
+  const handleChangeSelect = (value: string[]) => {
+    const cat = {
+      connect: value.map(v => {
+        return {
+          id: Number(v)
+        }
+      })
+    }
+    setValues({ ...values, 'categories': { ...cat } })
+  }
 
   if (cat_loading) {
     return (<div>Loading...</div>)
@@ -192,27 +194,27 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
             type="number" placeholder="Price $" style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
-        {/*<Form.Item*/}
-        {/*  label="Category"*/}
-        {/*  name="categories"*/}
-        {/*  // noStyle*/}
-        {/*  rules={[{ required: true, message: 'Category is required' }]}*/}
-        {/*>*/}
-        {/*  <Select*/}
-        {/*    onChange={handleChangeSelect}*/}
-        {/*    mode="multiple"*/}
-        {/*    placeholder="Select category">*/}
-        {/*    {categories?.map((category) =>*/}
-        {/*      <Select.Option*/}
-        {/*        key={String(category?.id)}*/}
-        {/*        value={String(category?.id)}*/}
-        {/*        onChange={handleChange}*/}
-        {/*      >{String(category?.name)}*/}
-        {/*      </Select.Option>*/}
-        {/*    )*/}
-        {/*    }*/}
-        {/*  </Select>*/}
-        {/*</Form.Item>*/}
+        <Form.Item
+          label="Category"
+          name="categories"
+          // noStyle
+          rules={[{ required: true, message: 'Category is required' }]}
+        >
+          <Select
+            onChange={handleChangeSelect}
+            mode="multiple"
+            placeholder="Select category">
+            {categories?.map((category) =>
+              <Select.Option
+                key={String(category?.id)}
+                value={String(category?.id)}
+                onChange={handleChange}
+              >{String(category?.name)}
+              </Select.Option>
+            )
+            }
+          </Select>
+        </Form.Item>
         <Form.Item
           label="images"
           name="files"
