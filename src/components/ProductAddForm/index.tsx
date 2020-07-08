@@ -99,7 +99,6 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
         data: {
           ...values,
           price
-
         }
       }
     }).then(m => console.log('createOneProduct:', m))
