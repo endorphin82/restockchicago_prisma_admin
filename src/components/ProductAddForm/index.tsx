@@ -98,7 +98,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
           ...values,
           price
         },
-        ...(fl && { files: fl })
+        ...((fl.length == 0) ? {} : { files: fl })
       }
     }).then(m => console.log('createOneProduct:', m))
       .catch(e => console.log('addProductERROR:', e))
