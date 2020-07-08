@@ -1,9 +1,13 @@
-import ApolloClient from "apollo-boost"
+// import ApolloClient from "apollo-boost"
+import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from "apollo-cache-inmemory"
+import { createUploadLink } from 'apollo-upload-client';
+
+const link = createUploadLink({ uri: process.env.REACT_APP_BASE_URL });
 
 const cache = new InMemoryCache();
 
 export const client = new ApolloClient({
-  cache,
-  uri: process.env.REACT_APP_BASE_URL,
+  link,
+  cache
 })
