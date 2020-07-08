@@ -82,24 +82,23 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
     // console.log('Received valuefromformlist of form:', valuefromformlist)
     const formData = new FormData()
     // console.log("formData-", formData)
-    valuefromformlist.files.forEach((file: any) => {
+    fl ?? valuefromformlist.files.forEach((file: any) => {
       setFl((fl: any[]) => [...fl, file.originFileObj])
       formData.append('files[]', file.originFileObj)
     })
+
     console.log('fl', fl)
     console.log('valuefromformlist', valuefromformlist)
-    // console.log("formData+", formData)
-    // const { name, icon, url } = values
     const price = priceStringToIntCent(values.price)
     console.log('onFinish')
 
     createOneProduct({
       variables: {
-        files: fl,
         data: {
           ...values,
           price
-        }
+        },
+        ...(fl && { files: fl })
       }
     }).then(m => console.log('createOneProduct:', m))
       .catch(e => console.log('addProductERROR:', e))
