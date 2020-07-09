@@ -48,7 +48,6 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
                         productsByNameAndCategoriesId: [...productsByNameAndCategoriesId, addProduct]
                       }
                     }
-
            */
         })!.productsByNameAndCategoryId
         cache.writeQuery({
