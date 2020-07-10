@@ -5,16 +5,13 @@ import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
 import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
 import { setIsOpenAddProductModal } from '../../actions'
 import { priceStringToIntCent } from '../../utils/utils'
-import {
-  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
-} from '../../actions/types'
 import { RootState } from '../../reducer'
-import { Product } from '../../__generated__/types'
-import { ProductsByNameAndCategoryIdDocument } from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
-import { IProductsByNameAndCategoryId } from '../Products/types'
+import { Category, Product } from '../../__generated__/types'
 import { useCreateOneProduct } from '../Products/mutations/__generated__/CreateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons/lib'
+import { ProductsByNameAndCategoryIdsDocument } from '../Products/queries/__generated__/ProductsByNameAndCategoryIds'
+import { IProductsByNameAndCategoryIds } from '../Products/types'
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
@@ -25,47 +22,49 @@ type PropsProductAddForm = {
 
 const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
   const [fl, setFl] = useState<any>([])
+  console.log('searchCategories', searchCategories)
   const [createOneProduct] = useCreateOneProduct(
     {
-      // TODO:
-      // @ts-ignore
-      update(cache, { data: { addProduct } }) {
-        const { productsByNameAndCategoryId } = cache.readQuery<IProductsByNameAndCategoryId>({
-          query: ProductsByNameAndCategoryIdDocument,
-          variables: {
-            name: searchName,
-            categories: searchCategories
-          }
-          /*  // TODO: Optimistic UI ?
-              // add reject case
-
-                    ,
-                    // @ts-ignore
-                    optimisticResponse: {
-                      __typename: "Mutation",
-                      addProduct: {
-                        __typename: "Product",// @ts-ignore
-                        productsByNameAndCategoriesId: [...productsByNameAndCategoriesId, addProduct]
-                      }
-                    }
-           */
-        })!.productsByNameAndCategoryId
-        cache.writeQuery({
-          query: ProductsByNameAndCategoryIdDocument,
-          data: {
-            // if add product includes search categories, update cache query productsByNameAndCategoriesId
-            // @ts-ignore
-            productsByNameAndCategoryId: createOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.concat([createOneProduct]) : productsByNameAndCategoryId
-          }
-        })
-      }
-      ,
+    //   // TODO:
+    //   // @ts-ignore
+    //   update(cache, { data: { addProduct } }) {
+    //     const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
+    //       query: ProductsByNameAndCategoryIdsDocument,
+    //       variables: {
+    //         name: searchName,
+    //         categories: searchCategories.map((c: Category) => Number(c.id))
+    //       }
+    //       /*  // TODO: Optimistic UI ?
+    //           // add reject case
+    //
+    //                 ,
+    //                 // @ts-ignore
+    //                 optimisticResponse: {
+    //                   __typename: "Mutation",
+    //                   addProduct: {
+    //                     __typename: "Product",// @ts-ignore
+    //                     productsByNameAndCategoriesId: [...productsByNameAndCategoriesId, addProduct]
+    //                   }
+    //                 }
+    //        */
+    //     })!.productsByNameAndCategoryIds
+    //     // cache.writeQuery({
+    //     //   query: ProductsByNameAndCategoryIdsDocument,
+    //     //   data: {
+    //     //     // if add product includes search categories, update cache query productsByNameAndCategoriesId
+    //     //     // @ts-ignore
+    //     //     productsByNameAndCategoryIds: createOneProduct.categories.every((cat: Category) => searchCategories.includes(cat.id)) ? productsByNameAndCategoryIds?.concat([createOneProduct]) : productsByNameAndCategoryIds
+    //     //   }
+    //     // })
+    //   }
+    //   ,
       refetchQueries: [
         {
-          query: ProductsByNameAndCategoryIdDocument,
+          query: ProductsByNameAndCategoryIdsDocument,
           variables: {
             name: searchName,
-            categories: searchCategories
+            // categories: [1, 2]
+            categories: searchCategories.map((c: Category) => Number(c.id))
           }
         }
       ]

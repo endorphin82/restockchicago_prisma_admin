@@ -21,7 +21,6 @@ const Products: React.FC<any> = ({ setIsOpenAddProductModal, clearEditProduct })
   return (
     <>
       <h1>Products</h1>
-
       <ProductsTable/>
       <ProductEditForm/>
       <ProductAddForm/>

@@ -356,10 +356,9 @@ export type Mutation = {
   deleteOneCategory?: Maybe<Category>;
   _createOneProduct: Product;
   updateOneProduct?: Maybe<Product>;
-  deleteOneProduct?: Maybe<Product>;
+  _deleteOneProduct?: Maybe<Product>;
   createOneProduct: Product;
-  uploadFiles: Array<File>;
-  uploadFile: Scalars['String'];
+  deleteOneProduct: Product;
 };
 
 
@@ -390,7 +389,7 @@ export type MutationUpdateOneProductArgs = {
 };
 
 
-export type MutationDeleteOneProductArgs = {
+export type Mutation_DeleteOneProductArgs = {
   where: ProductWhereUniqueInput;
 };
 
@@ -401,15 +400,8 @@ export type MutationCreateOneProductArgs = {
 };
 
 
-export type MutationUploadFilesArgs = {
-  files: Array<Scalars['Upload']>;
-  product_id?: Maybe<Scalars['Int']>;
-};
-
-
-export type MutationUploadFileArgs = {
-  file: Scalars['Upload'];
-  product_id?: Maybe<Scalars['Int']>;
+export type MutationDeleteOneProductArgs = {
+  where: ProductWhereUniqueInput;
 };
 
 export type NullableIntFilter = {
@@ -604,6 +596,7 @@ export type Query = {
   productByName: Product;
   categoryByName: Category;
   productsByNameAndCategoryId: Array<Product>;
+  productsByNameAndCategoryIds: Array<Product>;
   productsByCategoryId: Array<Product>;
 };
 
@@ -647,6 +640,12 @@ export type QueryCategoryByNameArgs = {
 export type QueryProductsByNameAndCategoryIdArgs = {
   name: Scalars['String'];
   category_id?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryProductsByNameAndCategoryIdsArgs = {
+  name: Scalars['String'];
+  category_ids?: Maybe<Array<Scalars['Int']>>;
 };
 
 

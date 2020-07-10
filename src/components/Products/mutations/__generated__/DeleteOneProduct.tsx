@@ -11,7 +11,7 @@ export type DeleteOneProductVariables = {
 
 export type DeleteOneProduct = (
   { __typename: 'Mutation' }
-  & { deleteOneProduct?: Types.Maybe<(
+  & { deleteOneProduct: (
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     & { images: Array<(
@@ -25,7 +25,7 @@ export type DeleteOneProduct = (
         & Pick<Types.ImageCat, 'id' | 'url'>
       )> }
     )> }
-  )> }
+  ) }
 );
 
 
