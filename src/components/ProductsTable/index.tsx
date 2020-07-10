@@ -13,15 +13,19 @@ import ProductsSearch from '../ProductsSearch'
 
 import { RootState } from '../../reducer'
 import {
-  useProductsByNameAndCategoryId
-} from '../Products/queries/__generated__/ProductsByNameAndCategoryId'
+  ProductsByNameAndCategoryIdsDocument,
+  useProductsByNameAndCategoryIds
+} from '../Products/queries/__generated__/ProductsByNameAndCategoryIds'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import ProductsSelectByCategories from '../ProductsSelectByCategories'
+import { useDeleteOneProduct } from '../Products/mutations/__generated__/DeleteOneProduct'
+import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
+import { IProductsByNameAndCategoryIds } from '../Products/types'
 
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
-  setSearchCategories: (searchCategories: Number | Category[] | [] | undefined) => void
+  setSearchCategories: (searchCategories: Number | Number[] | Category[] | [] | undefined) => void
   setSearchName: (searchName: String | void | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
   categories: Category[] | [] | any
@@ -44,27 +48,61 @@ const ProductsTable: React.FC<any> = (
   //       }
   //     },
   //       {
-  //         query: ProductsByNameAndCategoryIdDocument,
+  //         query: ProductsByNameAndCategoryIdsDocument,
   //         variables: {
   //           name: searchName,
-  //           category_id: searchCategory
+  //           category_ids: searchCategory
   //         }
   //       }]
   //   }
   // )
 
-  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryId(
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryIds(
     {
       variables: {
-        name: searchName as string
-        // category_id: searchCategory as number
+        name: searchName as string,
+        category_ids: categories.map((c: Category) => Number(c.id))
       }
     }
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
+  const [deleteOneProduct] = useDeleteOneProduct(
+    {
+      // @ts-ignore
+      // update(cache, { data: { deleteOneProduct } }) {
+      //   const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
+      //     query: ProductsByNameAndCategoryIdsDocument,
+      //     variables: {
+      //       name: searchName,
+      //       // categories: searchCategories
+      //       categories: [1, 2]
+      //     }
+      //   })!.productsByNameAndCategoryIds
+      // cache.writeQuery({
+      //   query: ProductsByNameAndCategoryIdsDocument,
+      //   data: {
+      //     // if add product includes search categories, update cache query productsByNameAndCategoriesId
+      //     // @ts-ignore
+      //     // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
+      //     productsByNameAndCategoryId: productsByNameAndCategoryId
+      //   }
+      // })
+      // }
+      // ,
+      //// TODO:
 
+      refetchQueries: [{
+        query: ProductsByNameAndCategoryIdsDocument,
+        variables: {
+          name: searchName,
+          category_ids: [1, 2]
+          // category_ids: searchCategories.map((c: Category) => c.id)
+        }
+      }]
+    }
+  )
   useEffect(() => {
     setSearchCategories(categories)
   }, [categories])
@@ -77,7 +115,7 @@ const ProductsTable: React.FC<any> = (
   if (prod_error || !prod_data || cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { productsByNameAndCategoryId } = prod_data
+  const { productsByNameAndCategoryIds } = prod_data
 
   // TODO:
   // @ts-ignore
@@ -95,23 +133,20 @@ const ProductsTable: React.FC<any> = (
   const handleDelete = (id: Number): void => {
     setIsVisualDeleteModal(true)
     // @ts-ignore
-    setProductDeleted(productsByNameAndCategoryId?.find((prod: Product) => prod.id === id))
+    setProductDeleted(productsByNameAndCategoryIds?.find((prod: Product) => prod.id === id))
   }
 
-  // const handleOk = (productDeleted: Product | any): void => {
-  //   const { id, name, price, category_id, images, icon } = productDeleted
-  //
-  //   // categories.push(REACT_APP_RECYCLE_BIN_ID)
-  //
-  //   updateProduct({
-  //     variables: {
-  //       id, name, price, categories, images, icon
-  //     }
-  //   }).then(m => console.log("updateProductMESSAGE:", m))
-  //     .catch((e: Error) => console.log("updateProductERROR:", e))
-  //
-  //   setIsVisualDeleteModal(false)
-  // }
+  const handleOk = (productDeleted: Product | any): void => {
+    deleteOneProduct({
+      variables: {
+        where: {
+          id: Number(productDeleted.id)
+        }
+      }
+    }).then(mess => console.log('deleteProduct response:', mess))
+      .catch(err => console.log('Error Delete Product', err))
+    setIsVisualDeleteModal(false)
+  }
 
   const handleCancel = () => {
     setIsVisualDeleteModal(false)
@@ -139,13 +174,13 @@ const ProductsTable: React.FC<any> = (
 
       <ProductsTableAntd
         // @ts-ignore
-        productsProp={productsByNameAndCategoryId}
+        productsProp={productsByNameAndCategoryIds}
         handleEditProp={handleEdit}
         handleDeleteProp={handleDelete}/>
       <Modal
-        title="Delete product in recycle bin?"
+        title="Delete product?"
         visible={Boolean(isVisualDeleteModal)}
-        // onOk={() => handleOk(productDeleted)}
+        onOk={() => handleOk(productDeleted)}
         onCancel={handleCancel}
       >
         <p>{productDeleted.id}</p>

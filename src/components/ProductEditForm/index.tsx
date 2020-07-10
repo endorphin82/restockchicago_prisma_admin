@@ -11,16 +11,6 @@ import { Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
-import { useUploadFile } from '../Products/mutations/__generated__/UploadFile'
-import { Mutation } from 'react-apollo'
-import Dropzone from 'react-dropzone'
-import gql from 'graphql-tag'
-
-const uploadFileMutation = gql`
-  mutation($file: Upload!) {
-    uploadFile(file: $file)
-  }
-`
 
 interface PropsProductEditForm {
   edited_product: Product

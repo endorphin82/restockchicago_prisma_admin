@@ -2,7 +2,7 @@ import {   REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { Product, Category } from '../../__generated__/types'
 import { Products } from './queries/__generated__/Products'
-import { ProductsByNameAndCategoryId } from "./queries/__generated__/ProductsByNameAndCategoryId"
+import { ProductsByNameAndCategoryIds } from './queries/__generated__/ProductsByNameAndCategoryIds'
 
 // export interface AllTasksResult {
 //   allTasks: any;  // TODO: Put correct type here
@@ -11,8 +11,8 @@ import { ProductsByNameAndCategoryId } from "./queries/__generated__/ProductsByN
 export interface IProducts {
   products: Products  // TODO: Put correct type here
 }
-export interface IProductsByNameAndCategoryId {
-  productsByNameAndCategoryId: ProductsByNameAndCategoryId  // TODO: Put correct type here
+export interface IProductsByNameAndCategoryIds {
+  productsByNameAndCategoryIds: ProductsByNameAndCategoryIds  // TODO: Put correct type here
 }
 
 export interface PropsProducts {

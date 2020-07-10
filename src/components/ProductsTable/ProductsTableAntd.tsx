@@ -4,6 +4,7 @@ import { Button, Table, Tooltip, Tag } from 'antd'
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined'
 import { Products } from '../Products/queries/__generated__/Products'
 import { Category } from '../../__generated__/types'
+import { REACT_APP_BASE_URL } from '../../actions/types'
 
 const styleImagesInTable = { width: '50px', height: '100%', marginRight: '10px' }
 
@@ -54,17 +55,24 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
     },
     {
       title: 'Images',
-      dataIndex: 'images',
-      key: 'images',
-      render: (images: String[]) => {
-        return (images)
+      dataIndex: 'img',
+      key: 'img',
+      render: (img: String) => {
+        let images = []
+        if (img) {
+          // @ts-ignore
+          const imgs = JSON.parse(img)
+          images = imgs.map((i: any) => i['name'])
+        }
+
+        return (images.length !== 0)
           ? <div>
             {
               images
-                .map((image, index) => <img
+                .map((image: string, index: number) => <img
                   key={String(`${image}+${index}`)}
                   alt="img"
-                  src={String(image)}
+                  src={`${REACT_APP_BASE_URL}/images/${image}`}
                   style={styleImagesInTable}/>
                 )
             }
@@ -84,7 +92,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
           </Button>
         </Tooltip>
         <Tooltip
-          title="Move to recycle bin">
+          title="Delete">
           <Button style={{ float: 'right' }}
                   onClick={() => handleDeleteProp(id)}
                   type="dashed"
