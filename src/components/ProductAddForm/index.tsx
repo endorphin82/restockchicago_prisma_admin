@@ -23,48 +23,35 @@ type PropsProductAddForm = {
 const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
   const [fl, setFl] = useState<any>([])
   console.log('searchCategories', searchCategories)
-  const [createOneProduct] = useCreateOneProduct(
-    {
-    //   // TODO:
-    //   // @ts-ignore
-    //   update(cache, { data: { addProduct } }) {
-    //     const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
-    //       query: ProductsByNameAndCategoryIdsDocument,
-    //       variables: {
-    //         name: searchName,
-    //         categories: searchCategories.map((c: Category) => Number(c.id))
-    //       }
-    //       /*  // TODO: Optimistic UI ?
-    //           // add reject case
-    //
-    //                 ,
-    //                 // @ts-ignore
-    //                 optimisticResponse: {
-    //                   __typename: "Mutation",
-    //                   addProduct: {
-    //                     __typename: "Product",// @ts-ignore
-    //                     productsByNameAndCategoriesId: [...productsByNameAndCategoriesId, addProduct]
-    //                   }
-    //                 }
-    //        */
-    //     })!.productsByNameAndCategoryIds
-    //     // cache.writeQuery({
-    //     //   query: ProductsByNameAndCategoryIdsDocument,
-    //     //   data: {
-    //     //     // if add product includes search categories, update cache query productsByNameAndCategoriesId
-    //     //     // @ts-ignore
-    //     //     productsByNameAndCategoryIds: createOneProduct.categories.every((cat: Category) => searchCategories.includes(cat.id)) ? productsByNameAndCategoryIds?.concat([createOneProduct]) : productsByNameAndCategoryIds
-    //     //   }
-    //     // })
-    //   }
-    //   ,
+  const [createOneProduct] = useCreateOneProduct({
+      //   // TODO:
+      // @ts-ignore
+      update(cache, { data: { createOneProduct } }) {
+        const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
+          query: ProductsByNameAndCategoryIdsDocument,
+          variables: {
+            name: searchName
+            // category_ids: searchCategories.map((c: Category) => Number(c.id))
+            // category_ids: [1, 2]
+          }
+        })!.productsByNameAndCategoryIds
+        cache.writeQuery({
+          query: ProductsByNameAndCategoryIdsDocument,
+          data: {
+            // if add product includes search categories, update cache query productsByNameAndCategoriesId
+            // @ts-ignore
+            // productsByNameAndCategoryIds: createOneProduct.categories.every((cat: Category) => searchCategories.includes(cat.id)) ? productsByNameAndCategoryIds?.concat([createOneProduct]) : productsByNameAndCategoryIds
+            productsByNameAndCategoryIds: productsByNameAndCategoryIds.concat([createOneProduct])
+          }
+        })
+      }
+      ,
       refetchQueries: [
         {
           query: ProductsByNameAndCategoryIdsDocument,
           variables: {
-            name: searchName,
-            // categories: [1, 2]
-            categories: searchCategories.map((c: Category) => Number(c.id))
+            name: searchName
+            // category_ids: searchCategories.map((c: Category) => Number(c.id))
           }
         }
       ]
