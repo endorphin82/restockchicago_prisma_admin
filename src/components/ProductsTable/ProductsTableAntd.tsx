@@ -44,7 +44,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
             {
               categories
                 .map((category) =>
-                  <span>
+                  <span key={category.id}>
                     <Tag color="blue" key={String(category?.name)}>
                       {category?.name}
                     </Tag>

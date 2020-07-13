@@ -41,7 +41,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
             // if add product includes search categories, update cache query productsByNameAndCategoriesId
             // @ts-ignore
             // productsByNameAndCategoryIds: createOneProduct.categories.every((cat: Category) => searchCategories.includes(cat.id)) ? productsByNameAndCategoryIds?.concat([createOneProduct]) : productsByNameAndCategoryIds
-            productsByNameAndCategoryIds: productsByNameAndCategoryIds.concat([createOneProduct])
+            productsByNameAndCategoryIds: [...productsByNameAndCategoryIds, createOneProduct]
           }
         })
       }
