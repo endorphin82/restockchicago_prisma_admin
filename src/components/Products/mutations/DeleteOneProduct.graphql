@@ -5,21 +5,5 @@ mutation DeleteOneProduct($where: ProductWhereUniqueInput! ) {
         price
         icon
         img
-        images{
-            id
-            url
-        }
-        categories{
-            id
-            name
-            description
-            url
-            parent
-            icon
-            images{
-                id
-                url
-            }
-        }
     }
 }

@@ -14,17 +14,6 @@ export type DeleteOneProduct = (
   & { deleteOneProduct: (
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
-    & { images: Array<(
-      { __typename: 'ImageProd' }
-      & Pick<Types.ImageProd, 'id' | 'url'>
-    )>, categories: Array<(
-      { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-      & { images: Array<(
-        { __typename: 'ImageCat' }
-        & Pick<Types.ImageCat, 'id' | 'url'>
-      )> }
-    )> }
   ) }
 );
 
@@ -37,22 +26,6 @@ export const DeleteOneProductDocument = gql`
     price
     icon
     img
-    images {
-      id
-      url
-    }
-    categories {
-      id
-      name
-      description
-      url
-      parent
-      icon
-      images {
-        id
-        url
-      }
-    }
   }
 }
     `;

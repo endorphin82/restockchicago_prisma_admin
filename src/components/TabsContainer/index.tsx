@@ -7,8 +7,8 @@ import Categories from '../Categories'
 import { connect } from 'react-redux'
 import { categoriesList } from '../../actions'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
-import { useProducts } from '../Products/queries/__generated__/Products'
 import { Category } from '../../__generated__/types'
+import { useProductsByNameAndCategoryIds } from '../Products/queries/__generated__/ProductsByNameAndCategoryIds'
 
 const { TabPane } = Tabs
 
@@ -22,8 +22,9 @@ interface Props {
 
 const TabsContainer: React.FC<any> = ({ categoriesList }) => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
-  const { loading: prod_loading, error: prod_error, data: prod_data } = useProducts()
-
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryIds({
+    variables: { name: '' }
+  })
   // const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
   //   variables: {
   //     id: REACT_APP_RECYCLE_BIN_ID

@@ -61,7 +61,7 @@ const ProductsTable: React.FC<any> = (
     {
       variables: {
         name: searchName as string,
-        category_ids: categories.map((c: Category) => Number(c.id))
+        // category_ids: categories.map((c: Category) => Number(c.id))
       }
     }
   )
@@ -71,33 +71,32 @@ const ProductsTable: React.FC<any> = (
   const [deleteOneProduct] = useDeleteOneProduct(
     {
       // @ts-ignore
-      // update(cache, { data: { deleteOneProduct } }) {
-      //   const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
-      //     query: ProductsByNameAndCategoryIdsDocument,
-      //     variables: {
-      //       name: searchName,
-      //       // categories: searchCategories
-      //       categories: [1, 2]
-      //     }
-      //   })!.productsByNameAndCategoryIds
-      // cache.writeQuery({
-      //   query: ProductsByNameAndCategoryIdsDocument,
-      //   data: {
-      //     // if add product includes search categories, update cache query productsByNameAndCategoriesId
-      //     // @ts-ignore
-      //     // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
-      //     productsByNameAndCategoryId: productsByNameAndCategoryId
-      //   }
-      // })
-      // }
-      // ,
+      update(cache, { data: { deleteOneProduct } }) {
+        const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
+          query: ProductsByNameAndCategoryIdsDocument,
+          variables: {
+            name: searchName,
+            // category_ids: searchCategories
+            // category_ids: [1, 2]
+          }
+        })!.productsByNameAndCategoryIds
+      cache.writeQuery({
+        query: ProductsByNameAndCategoryIdsDocument,
+        data: {
+          // if add product includes search categories, update cache query productsByNameAndCategoriesId
+          // @ts-ignore
+          // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
+          productsByNameAndCategoryIds: productsByNameAndCategoryIds.filter((prod: Product) => deleteOneProduct.id !== prod.id)
+        }
+      })
+      }
+      ,
       //// TODO:
 
       refetchQueries: [{
         query: ProductsByNameAndCategoryIdsDocument,
         variables: {
           name: searchName,
-          category_ids: [1, 2]
           // category_ids: searchCategories.map((c: Category) => c.id)
         }
       }]

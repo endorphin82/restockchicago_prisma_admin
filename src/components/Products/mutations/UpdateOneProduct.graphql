@@ -4,10 +4,7 @@ mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUnique
     name
     price
     icon
-    images{
-      id
-      url
-    }
+    img
     categories{
       id
       name
