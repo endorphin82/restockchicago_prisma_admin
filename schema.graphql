@@ -40,12 +40,13 @@ type ImageProd {
 type Mutation {
   _createOneProduct(data: ProductCreateInput!): Product!
   _deleteOneProduct(where: ProductWhereUniqueInput!): Product
+  _updateOneProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
   createOneCategory(data: CategoryCreateInput!): Category!
   createOneProduct(data: ProductCreateInput!, files: [Upload!]): Product!
   deleteOneCategory(where: CategoryWhereUniqueInput!): Category
   deleteOneProduct(where: ProductWhereUniqueInput!): Product!
   updateOneCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
-  updateOneProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
+  updateOneProduct(data: ProductUpdateInput!, files: [Upload!], payload: String, where: ProductWhereUniqueInput!): Product!
 }
 
 type Product {
