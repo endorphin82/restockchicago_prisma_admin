@@ -41,7 +41,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
             // if add product includes search categories, update cache query productsByNameAndCategoriesId
             // @ts-ignore
             // productsByNameAndCategoryIds: createOneProduct.categories.every((cat: Category) => searchCategories.includes(cat.id)) ? productsByNameAndCategoryIds?.concat([createOneProduct]) : productsByNameAndCategoryIds
-            productsByNameAndCategoryIds: [...productsByNameAndCategoryIds, createOneProduct]
+            productsByNameAndCategoryIds: productsByNameAndCategoryIds ? [...productsByNameAndCategoryIds, createOneProduct] : createOneProduct
           }
         })
       }
@@ -59,8 +59,6 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
   const [values, setValues] = useState<Product | any>({})
-  console.log('values+++', values)
-  console.log('===fl', fl)
 
   const onFinish = (valuefromformlist: any) => {
     console.log('Received values of form:', values)

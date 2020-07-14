@@ -60,7 +60,7 @@ const ProductsTable: React.FC<any> = (
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryIds(
     {
       variables: {
-        name: searchName as string,
+        name: searchName as string
         // category_ids: categories.map((c: Category) => Number(c.id))
       }
     }
@@ -75,20 +75,20 @@ const ProductsTable: React.FC<any> = (
         const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
           query: ProductsByNameAndCategoryIdsDocument,
           variables: {
-            name: searchName,
+            name: searchName
             // category_ids: searchCategories
             // category_ids: [1, 2]
           }
         })!.productsByNameAndCategoryIds
-      cache.writeQuery({
-        query: ProductsByNameAndCategoryIdsDocument,
-        data: {
-          // if add product includes search categories, update cache query productsByNameAndCategoriesId
-          // @ts-ignore
-          // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
-          productsByNameAndCategoryIds: productsByNameAndCategoryIds.filter((prod: Product) => deleteOneProduct.id !== prod.id)
-        }
-      })
+        cache.writeQuery({
+          query: ProductsByNameAndCategoryIdsDocument,
+          data: {
+            // if add product includes search categories, update cache query productsByNameAndCategoriesId
+            // @ts-ignore
+            // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
+            productsByNameAndCategoryIds: productsByNameAndCategoryIds?.filter((prod: Product) => deleteOneProduct.id !== prod.id)
+          }
+        })
       }
       ,
       //// TODO:
@@ -96,7 +96,7 @@ const ProductsTable: React.FC<any> = (
       refetchQueries: [{
         query: ProductsByNameAndCategoryIdsDocument,
         variables: {
-          name: searchName,
+          name: searchName
           // category_ids: searchCategories.map((c: Category) => c.id)
         }
       }]
@@ -123,7 +123,7 @@ const ProductsTable: React.FC<any> = (
   // })
   const handleEdit = (id: Number): void => {
     // @ts-ignore
-    const prod = productsByNameAndCategoryId?.find((prod: Product) => prod.id === id)
+    const prod = productsByNameAndCategoryIds?.find((prod: Product) => prod.id === id)
     // @ts-ignore
     editProduct(prod)
     setIsOpenEditProductModal(true)

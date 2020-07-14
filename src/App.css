@@ -38,3 +38,8 @@
 /*    transform: rotate(360deg);*/
 /*  }*/
 /*}*/
+
+.ant-form-item-control{
+    margin-left: 0;
+    max-width: 100%;
+}
