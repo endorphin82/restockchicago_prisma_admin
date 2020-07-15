@@ -12,6 +12,7 @@ import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateO
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
 import ImageTable from './ImageTable'
+import categories_list from '../../reducer/categories-list'
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -22,7 +23,7 @@ interface PropsProductEditForm {
 
 const ProductEditForm: React.FC<any> = (
   {
-    clearEditProduct, edited_product,
+    clearEditProduct, edited_product, categoryList,
     isOpenEditProductModal, setIsOpenEditProductModal
   }) => {
   const [formEditProduct] = Form.useForm()
@@ -70,13 +71,17 @@ const ProductEditForm: React.FC<any> = (
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
-  const handleChangeSelect = (value: string[]) => {
+
+  const handleChangeSelect = (value: []) => {
     const cat = {
       connect: value.map(v => {
         return {
           id: Number(v)
         }
-      })
+      }),
+      disconnect: categoryList?.filter((cat: Category) => {
+        return !value.some(item => item === cat.id)
+      }).map((c: Category) => ({ id: Number(c.id) }))
     }
     setValues({ ...values, 'categories': { ...cat } })
   }
@@ -144,19 +149,18 @@ const ProductEditForm: React.FC<any> = (
             placeholder="Select category"
             // style={{ width: '100%'}}
             onChange={handleChangeSelect}
-            // defaultValue={edited_product?.categories?.map((c: Category) => c.name)}
           >
-            {edited_product?.categories?.map((c: Category) => {
-              return <Select.Option key={c.id}
-                                    value={Number(c?.id)}>{c.name}</Select.Option>
-            })
+            {categoryList?.map((c: Category) => <Select.Option
+              defaultValue={edited_product?.categories?.map((c: Category) => Number(c.id))}
+              key={Number(c.id)}
+              value={Number(c.id)}>{c.name}</Select.Option>
+            )
             }
           </Select>
-
         </Form.Item>
 
-        <Form.Item name="images" style={{ width: '100%'}}>
-          <ImageTable />
+        <Form.Item name="images" style={{ width: '100%' }}>
+          <ImageTable/>
         </Form.Item>
 
         <Form.Item
@@ -194,12 +198,14 @@ const formItemLayoutWithOutLabel = {
 
 interface StateProps {
   isOpenEditProductModal: Boolean
-  edited_product?: Product | {}
+  edited_product?: Product | {},
+  categoryList?: Category | {}
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenEditProductModal: state.edit_product_modal.isOpen,
-  edited_product: state.edit_product.product
+  edited_product: state.edit_product.product,
+  categoryList: state.categories_list.categories
 })
 
 export default connect<typeof ProductEditForm>(
