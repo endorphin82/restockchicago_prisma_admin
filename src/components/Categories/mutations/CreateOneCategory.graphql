@@ -15,10 +15,7 @@ mutation CreateOneCategory($data: CategoryCreateInput! ) {
             name
             price
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }

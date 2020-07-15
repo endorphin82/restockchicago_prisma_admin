@@ -15,10 +15,7 @@ query Categories{
             name
             price
             icon
-            images{
-                id
-                url
-            }
+            img
             categories{
                 id
                 name

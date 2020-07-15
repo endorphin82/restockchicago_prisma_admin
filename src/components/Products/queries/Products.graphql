@@ -5,10 +5,6 @@ query Products{
         price
         icon
         img
-        images{
-            id
-            url
-        }
         categories{
             id
             name

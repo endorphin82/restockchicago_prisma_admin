@@ -19,11 +19,7 @@ export type category = (
       & Pick<Types.ImageCat, 'id' | 'url'>
     )>, products: Array<(
       { __typename: 'Product' }
-      & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon'>
-      & { images: Array<(
-        { __typename: 'ImageProd' }
-        & Pick<Types.ImageProd, 'id' | 'url'>
-      )> }
+      & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     )> }
   )> }
 );
@@ -47,10 +43,7 @@ export const categoryDocument = gql`
       name
       price
       icon
-      images {
-        id
-        url
-      }
+      img
     }
   }
 }

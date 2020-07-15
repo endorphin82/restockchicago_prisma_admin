@@ -12,10 +12,7 @@ export type Products = (
   & { products: Array<(
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
-    & { images: Array<(
-      { __typename: 'ImageProd' }
-      & Pick<Types.ImageProd, 'id' | 'url'>
-    )>, categories: Array<(
+    & { categories: Array<(
       { __typename: 'Category' }
       & Pick<Types.Category, 'id' | 'name' | 'parent' | 'url' | 'description' | 'icon'>
       & { images: Array<(
@@ -35,10 +32,6 @@ export const ProductsDocument = gql`
     price
     icon
     img
-    images {
-      id
-      url
-    }
     categories {
       id
       name

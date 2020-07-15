@@ -12,18 +12,14 @@ export type UpdateOneProductVariables = {
 
 export type UpdateOneProduct = (
   { __typename: 'Mutation' }
-  & { updateOneProduct?: Types.Maybe<(
+  & { updateOneProduct: (
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     & { categories: Array<(
       { __typename: 'Category' }
       & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-      & { images: Array<(
-        { __typename: 'ImageCat' }
-        & Pick<Types.ImageCat, 'id' | 'url'>
-      )> }
     )> }
-  )> }
+  ) }
 );
 
 
@@ -42,10 +38,6 @@ export const UpdateOneProductDocument = gql`
       url
       parent
       icon
-      images {
-        id
-        url
-      }
     }
   }
 }

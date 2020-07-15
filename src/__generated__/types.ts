@@ -253,91 +253,6 @@ export type ImageCatWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
 };
 
-export type ImageProd = {
-  __typename?: 'ImageProd';
-  id: Scalars['Int'];
-  product?: Maybe<Product>;
-  url: Scalars['String'];
-  product_id?: Maybe<Scalars['Int']>;
-};
-
-export type ImageProdCreateManyWithoutProductInput = {
-  create?: Maybe<Array<ImageProdCreateWithoutProductInput>>;
-  connect?: Maybe<Array<ImageProdWhereUniqueInput>>;
-};
-
-export type ImageProdCreateWithoutProductInput = {
-  url: Scalars['String'];
-};
-
-export type ImageProdFilter = {
-  every?: Maybe<ImageProdWhereInput>;
-  some?: Maybe<ImageProdWhereInput>;
-  none?: Maybe<ImageProdWhereInput>;
-};
-
-export type ImageProdScalarWhereInput = {
-  id?: Maybe<IntFilter>;
-  product_id?: Maybe<NullableIntFilter>;
-  url?: Maybe<StringFilter>;
-  AND?: Maybe<Array<ImageProdScalarWhereInput>>;
-  OR?: Maybe<Array<ImageProdScalarWhereInput>>;
-  NOT?: Maybe<Array<ImageProdScalarWhereInput>>;
-};
-
-export type ImageProdUpdateManyDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type ImageProdUpdateManyWithoutProductInput = {
-  create?: Maybe<Array<ImageProdCreateWithoutProductInput>>;
-  connect?: Maybe<Array<ImageProdWhereUniqueInput>>;
-  set?: Maybe<Array<ImageProdWhereUniqueInput>>;
-  disconnect?: Maybe<Array<ImageProdWhereUniqueInput>>;
-  delete?: Maybe<Array<ImageProdWhereUniqueInput>>;
-  update?: Maybe<Array<ImageProdUpdateWithWhereUniqueWithoutProductInput>>;
-  updateMany?: Maybe<Array<ImageProdUpdateManyWithWhereNestedInput>>;
-  deleteMany?: Maybe<Array<ImageProdScalarWhereInput>>;
-  upsert?: Maybe<Array<ImageProdUpsertWithWhereUniqueWithoutProductInput>>;
-};
-
-export type ImageProdUpdateManyWithWhereNestedInput = {
-  where: ImageProdScalarWhereInput;
-  data: ImageProdUpdateManyDataInput;
-};
-
-export type ImageProdUpdateWithoutProductDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type ImageProdUpdateWithWhereUniqueWithoutProductInput = {
-  where: ImageProdWhereUniqueInput;
-  data: ImageProdUpdateWithoutProductDataInput;
-};
-
-export type ImageProdUpsertWithWhereUniqueWithoutProductInput = {
-  where: ImageProdWhereUniqueInput;
-  update: ImageProdUpdateWithoutProductDataInput;
-  create: ImageProdCreateWithoutProductInput;
-};
-
-export type ImageProdWhereInput = {
-  id?: Maybe<IntFilter>;
-  product_id?: Maybe<NullableIntFilter>;
-  url?: Maybe<StringFilter>;
-  AND?: Maybe<Array<ImageProdWhereInput>>;
-  OR?: Maybe<Array<ImageProdWhereInput>>;
-  NOT?: Maybe<Array<ImageProdWhereInput>>;
-  product?: Maybe<ProductWhereInput>;
-};
-
-export type ImageProdWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>;
-  product_id?: Maybe<Scalars['Int']>;
-};
-
 export type IntFilter = {
   equals?: Maybe<Scalars['Int']>;
   not?: Maybe<Scalars['Int']>;
@@ -355,8 +270,9 @@ export type Mutation = {
   updateOneCategory?: Maybe<Category>;
   deleteOneCategory?: Maybe<Category>;
   _createOneProduct: Product;
-  updateOneProduct?: Maybe<Product>;
+  _updateOneProduct?: Maybe<Product>;
   _deleteOneProduct?: Maybe<Product>;
+  updateOneProduct: Product;
   createOneProduct: Product;
   deleteOneProduct: Product;
 };
@@ -383,7 +299,7 @@ export type Mutation_CreateOneProductArgs = {
 };
 
 
-export type MutationUpdateOneProductArgs = {
+export type Mutation_UpdateOneProductArgs = {
   data: ProductUpdateInput;
   where: ProductWhereUniqueInput;
 };
@@ -391,6 +307,14 @@ export type MutationUpdateOneProductArgs = {
 
 export type Mutation_DeleteOneProductArgs = {
   where: ProductWhereUniqueInput;
+};
+
+
+export type MutationUpdateOneProductArgs = {
+  data: ProductUpdateInput;
+  where: ProductWhereUniqueInput;
+  files?: Maybe<Array<Scalars['Upload']>>;
+  payload?: Maybe<Scalars['String']>;
 };
 
 
@@ -438,7 +362,6 @@ export type Product = {
   description?: Maybe<Scalars['String']>;
   icon: Scalars['String'];
   price: Scalars['Int'];
-  images: Array<ImageProd>;
   img?: Maybe<Scalars['String']>;
 };
 
@@ -450,14 +373,6 @@ export type ProductCategoriesArgs = {
   after?: Maybe<CategoryWhereUniqueInput>;
 };
 
-
-export type ProductImagesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<ImageProdWhereUniqueInput>;
-  after?: Maybe<ImageProdWhereUniqueInput>;
-};
-
 export type ProductCreateInput = {
   description?: Maybe<Scalars['String']>;
   icon: Scalars['String'];
@@ -465,7 +380,6 @@ export type ProductCreateInput = {
   name: Scalars['String'];
   price: Scalars['Int'];
   url: Scalars['String'];
-  images?: Maybe<ImageProdCreateManyWithoutProductInput>;
   categories?: Maybe<CategoryCreateManyWithoutProductsInput>;
 };
 
@@ -481,7 +395,6 @@ export type ProductCreateWithoutCategoriesInput = {
   name: Scalars['String'];
   price: Scalars['Int'];
   url: Scalars['String'];
-  images?: Maybe<ImageProdCreateManyWithoutProductInput>;
 };
 
 export type ProductFilter = {
@@ -498,7 +411,6 @@ export type ProductScalarWhereInput = {
   name?: Maybe<StringFilter>;
   price?: Maybe<IntFilter>;
   url?: Maybe<StringFilter>;
-  images?: Maybe<ImageProdFilter>;
   categories?: Maybe<CategoryFilter>;
   AND?: Maybe<Array<ProductScalarWhereInput>>;
   OR?: Maybe<Array<ProductScalarWhereInput>>;
@@ -513,7 +425,6 @@ export type ProductUpdateInput = {
   name?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Int']>;
   url?: Maybe<Scalars['String']>;
-  images?: Maybe<ImageProdUpdateManyWithoutProductInput>;
   categories?: Maybe<CategoryUpdateManyWithoutProductsInput>;
 };
 
@@ -552,7 +463,6 @@ export type ProductUpdateWithoutCategoriesDataInput = {
   name?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Int']>;
   url?: Maybe<Scalars['String']>;
-  images?: Maybe<ImageProdUpdateManyWithoutProductInput>;
 };
 
 export type ProductUpdateWithWhereUniqueWithoutCategoriesInput = {
@@ -574,7 +484,6 @@ export type ProductWhereInput = {
   name?: Maybe<StringFilter>;
   price?: Maybe<IntFilter>;
   url?: Maybe<StringFilter>;
-  images?: Maybe<ImageProdFilter>;
   categories?: Maybe<CategoryFilter>;
   AND?: Maybe<Array<ProductWhereInput>>;
   OR?: Maybe<Array<ProductWhereInput>>;

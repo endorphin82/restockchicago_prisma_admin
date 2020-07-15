@@ -7,8 +7,7 @@ import { PropsUpdateProduct } from '../Products/types'
 import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
 import { RootState } from '../../reducer'
 import {
-  ProductsByCategoryIdDocument,
-  useProductsByCategoryId
+  ProductsByCategoryIdDocument
 } from '../Products/queries/__generated__/ProductsByCategoryId'
 
 import { Category, Product } from '../../__generated__/types'
@@ -89,7 +88,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
       categories: [valuefromform?.category]
     }
 
-    const { name, images, price, categories, icon } = edited_product
+    const { name, price, categories, icon } = edited_product
     // TODO:
     // @ts-ignore
     const id = Number(edited_product.id)
@@ -99,7 +98,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
     // @ts-ignore
     updateOneProduct<PropsUpdateProduct>({
       variables: {
-        id, name, price, categories, images, icon
+        id, name, price, categories, icon
       }
     }).then((m: any) => {
         console.log('updateProductMESSAGE:', m)
@@ -125,14 +124,14 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
       //   categories: [...categories]
       // }
       const {
-        id, name, price, categories, images, icon
+        id, name, price, categories, icon
       } = edit_product
       // console.log("productWithoutRecycleBin", productWithoutRecycleBin)
       // TODO:
       // @ts-ignore
       updateProduct<PropsUpdateProduct>({
         variables: {
-          id, name, price, categories, images, icon
+          id, name, price, categories, icon
         }
       }).then((m: String) => {
           console.log('updateProductMESSAGE:', m)
@@ -203,27 +202,28 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
               </Tag>
         </span>
       )
-    },
-    {
-      title: 'Images',
-      dataIndex: 'images',
-      key: 'images',
-      render: (images: String[]) => {
-        return (images)
-          ? <div>
-            {
-              images
-                .map(image => <img
-                  key={String(image)}
-                  alt="img"
-                  src={String(image)}
-                  style={styleImagesInTable}/>
-                )
-            }
-          </div>
-          : <span>no images</span>
-      }
-    },
+    }
+    ,
+    // {
+    //   title: 'Images',
+    //   dataIndex: 'images',
+    //   key: 'images',
+    //   render: (images: String[]) => {
+    //     return (images)
+    //       ? <div>
+    //         {
+    //           images
+    //             .map(image => <img
+    //               key={String(image)}
+    //               alt="img"
+    //               src={String(image)}
+    //               style={styleImagesInTable}/>
+    //             )
+    //         }
+    //       </div>
+    //       : <span>no images</span>
+    //   }
+    // },
     {
       title: 'Actions',
       dataIndex: 'id',
