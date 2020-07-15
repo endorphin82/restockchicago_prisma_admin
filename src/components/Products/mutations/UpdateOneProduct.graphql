@@ -12,10 +12,6 @@ mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUnique
       url
       parent
       icon
-      images{
-        id
-        url
-      }
     }
   }
 }

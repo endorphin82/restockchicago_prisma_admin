@@ -5,10 +5,6 @@ query ProductByName($name: String!){
         price
         icon
         img
-        images{
-            id
-            url
-        }
         categories{
             id
             name

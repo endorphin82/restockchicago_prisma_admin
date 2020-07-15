@@ -15,10 +15,7 @@ mutation DeleteOneCategory($where: CategoryWhereUniqueInput!) {
             name
             price
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }

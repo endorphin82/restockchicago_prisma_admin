@@ -30,13 +30,6 @@ type ImageCat {
   url: String!
 }
 
-type ImageProd {
-  id: Int!
-  product: Product
-  product_id: Int
-  url: String!
-}
-
 type Mutation {
   _createOneProduct(data: ProductCreateInput!): Product!
   _deleteOneProduct(where: ProductWhereUniqueInput!): Product
@@ -54,7 +47,6 @@ type Product {
   description: String
   icon: String!
   id: Int!
-  images(after: ImageProdWhereUniqueInput, before: ImageProdWhereUniqueInput, first: Int, last: Int): [ImageProd!]!
   img: String
   name: String!
   price: Int!
@@ -272,83 +264,6 @@ input ImageCatWhereUniqueInput {
   id: Int
 }
 
-input ImageProdCreateManyWithoutProductInput {
-  connect: [ImageProdWhereUniqueInput!]
-  create: [ImageProdCreateWithoutProductInput!]
-}
-
-input ImageProdCreateWithoutProductInput {
-  url: String!
-}
-
-input ImageProdFilter {
-  every: ImageProdWhereInput
-  none: ImageProdWhereInput
-  some: ImageProdWhereInput
-}
-
-input ImageProdScalarWhereInput {
-  AND: [ImageProdScalarWhereInput!]
-  NOT: [ImageProdScalarWhereInput!]
-  OR: [ImageProdScalarWhereInput!]
-  id: IntFilter
-  product_id: NullableIntFilter
-  url: StringFilter
-}
-
-input ImageProdUpdateManyDataInput {
-  id: Int
-  url: String
-}
-
-input ImageProdUpdateManyWithWhereNestedInput {
-  data: ImageProdUpdateManyDataInput!
-  where: ImageProdScalarWhereInput!
-}
-
-input ImageProdUpdateManyWithoutProductInput {
-  connect: [ImageProdWhereUniqueInput!]
-  create: [ImageProdCreateWithoutProductInput!]
-  delete: [ImageProdWhereUniqueInput!]
-  deleteMany: [ImageProdScalarWhereInput!]
-  disconnect: [ImageProdWhereUniqueInput!]
-  set: [ImageProdWhereUniqueInput!]
-  update: [ImageProdUpdateWithWhereUniqueWithoutProductInput!]
-  updateMany: [ImageProdUpdateManyWithWhereNestedInput!]
-  upsert: [ImageProdUpsertWithWhereUniqueWithoutProductInput!]
-}
-
-input ImageProdUpdateWithWhereUniqueWithoutProductInput {
-  data: ImageProdUpdateWithoutProductDataInput!
-  where: ImageProdWhereUniqueInput!
-}
-
-input ImageProdUpdateWithoutProductDataInput {
-  id: Int
-  url: String
-}
-
-input ImageProdUpsertWithWhereUniqueWithoutProductInput {
-  create: ImageProdCreateWithoutProductInput!
-  update: ImageProdUpdateWithoutProductDataInput!
-  where: ImageProdWhereUniqueInput!
-}
-
-input ImageProdWhereInput {
-  AND: [ImageProdWhereInput!]
-  NOT: [ImageProdWhereInput!]
-  OR: [ImageProdWhereInput!]
-  id: IntFilter
-  product: ProductWhereInput
-  product_id: NullableIntFilter
-  url: StringFilter
-}
-
-input ImageProdWhereUniqueInput {
-  id: Int
-  product_id: Int
-}
-
 input IntFilter {
   equals: Int
   gt: Int
@@ -389,7 +304,6 @@ input ProductCreateInput {
   categories: CategoryCreateManyWithoutProductsInput
   description: String
   icon: String!
-  images: ImageProdCreateManyWithoutProductInput
   img: String
   name: String!
   price: Int!
@@ -404,7 +318,6 @@ input ProductCreateManyWithoutCategoriesInput {
 input ProductCreateWithoutCategoriesInput {
   description: String
   icon: String!
-  images: ImageProdCreateManyWithoutProductInput
   img: String
   name: String!
   price: Int!
@@ -425,7 +338,6 @@ input ProductScalarWhereInput {
   description: NullableStringFilter
   icon: StringFilter
   id: IntFilter
-  images: ImageProdFilter
   img: NullableStringFilter
   name: StringFilter
   price: IntFilter
@@ -437,7 +349,6 @@ input ProductUpdateInput {
   description: String
   icon: String
   id: Int
-  images: ImageProdUpdateManyWithoutProductInput
   img: String
   name: String
   price: Int
@@ -480,7 +391,6 @@ input ProductUpdateWithoutCategoriesDataInput {
   description: String
   icon: String
   id: Int
-  images: ImageProdUpdateManyWithoutProductInput
   img: String
   name: String
   price: Int
@@ -501,7 +411,6 @@ input ProductWhereInput {
   description: NullableStringFilter
   icon: StringFilter
   id: IntFilter
-  images: ImageProdFilter
   img: NullableStringFilter
   name: StringFilter
   price: IntFilter

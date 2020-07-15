@@ -43,3 +43,24 @@
     margin-left: 0;
     max-width: 100%;
 }
+
+.selected {
+    opacity: 0.4;
+}
+.image__list{
+    list-style: none;
+}
+.images__item{
+    cursor: move;
+    margin-bottom: 5px;
+}
+
+.ant-upload-list-item{
+    cursor: move;
+}
+.dragged .item {
+    opacity: 0.25;
+    background-color: #ccc;
+    border-top: 5px solid #999999;
+    border-bottom: 1px solid #ffffff;
+}
