@@ -1,5 +1,5 @@
-mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUniqueInput!) {
-  updateOneProduct(data: $data, where: $where){
+mutation UpdateOneProduct($data: ProductUpdateInput!, $files: [Upload!], $payloadEditProduct: String,  $where: ProductWhereUniqueInput!) {
+  updateOneProduct(data: $data, files: $files, payloadEditProduct: $payloadEditProduct, where: $where){
     id
     name
     price

@@ -39,7 +39,7 @@ type Mutation {
   deleteOneCategory(where: CategoryWhereUniqueInput!): Category
   deleteOneProduct(where: ProductWhereUniqueInput!): Product!
   updateOneCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
-  updateOneProduct(data: ProductUpdateInput!, files: [Upload!], payload: String, where: ProductWhereUniqueInput!): Product!
+  updateOneProduct(data: ProductUpdateInput!, files: [Upload!], payloadEditProduct: String, where: ProductWhereUniqueInput!): Product!
 }
 
 type Product {

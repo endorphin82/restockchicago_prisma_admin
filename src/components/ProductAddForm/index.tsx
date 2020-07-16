@@ -62,9 +62,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
 
   const onFinish = (valuefromformlist: any) => {
     console.log('Received values of form:', values)
-    // console.log('Received valuefromformlist of form:', valuefromformlist)
     const formData = new FormData()
-    // console.log("formData-", formData)
     fl ?? valuefromformlist.files.forEach((file: any) => {
       setFl((fl: any[]) => [...fl, file.originFileObj])
       formData.append('files[]', file.originFileObj)

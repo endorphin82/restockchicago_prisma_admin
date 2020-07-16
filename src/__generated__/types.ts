@@ -314,7 +314,7 @@ export type MutationUpdateOneProductArgs = {
   data: ProductUpdateInput;
   where: ProductWhereUniqueInput;
   files?: Maybe<Array<Scalars['Upload']>>;
-  payload?: Maybe<Scalars['String']>;
+  payloadEditProduct?: Maybe<Scalars['String']>;
 };
 
 
