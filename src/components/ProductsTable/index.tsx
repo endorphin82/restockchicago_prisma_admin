@@ -7,10 +7,8 @@ import {
   setSearchName
 } from '../../actions'
 import ProductsTableAntd from './ProductsTableAntd'
-
 import { Category, Product } from '../../__generated__/types'
 import ProductsSearch from '../ProductsSearch'
-
 import { RootState } from '../../reducer'
 import {
   ProductsByNameAndCategoryIdsDocument,
@@ -19,7 +17,6 @@ import {
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import ProductsSelectByCategories from '../ProductsSelectByCategories'
 import { useDeleteOneProduct } from '../Products/mutations/__generated__/DeleteOneProduct'
-import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
 import { IProductsByNameAndCategoryIds } from '../Products/types'
 
 

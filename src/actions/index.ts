@@ -3,7 +3,7 @@ import {
   CATEGORIES_LIST, CLEAR_EDIT_CATEGORY, CLEAR_EDIT_PRODUCT, EDIT_CATEGORY,
   EDIT_PRODUCT, IS_OPEN_ADD_CATEGORY_MODAL, IS_OPEN_ADD_PRODUCT_MODAL,
   IS_OPEN_EDIT_CATEGORY_MODAL, IS_OPEN_EDIT_PRODUCT_MODAL,
-  SEARCH_CATEGORIES_LIST, SEARCH_NAME
+  SEARCH_CATEGORIES_LIST, SEARCH_NAME, EDIT_PRODUCT_PAYLOAD
 } from "./types"
 
 export const editProduct = (product: Product) => ({
@@ -28,6 +28,11 @@ export const categoriesList = (categories: Category[] | []) => ({
 export const setSearchCategories = (searchCategories: Category[] | [] | undefined) => ({
   type: SEARCH_CATEGORIES_LIST,
   payload: searchCategories
+} as const)
+
+export const setPayloadEditProduct = (payloadEditProduct: string | undefined) => ({
+  type: EDIT_PRODUCT_PAYLOAD,
+  payload: payloadEditProduct
 } as const)
 
 export const setSearchName = (searchName: String | void | undefined) => ({

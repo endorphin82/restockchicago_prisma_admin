@@ -39,28 +39,41 @@
 /*  }*/
 /*}*/
 
-.ant-form-item-control{
+ .ant-form-item-control{
     margin-left: 0;
     max-width: 100%;
 }
-
-.selected {
-    opacity: 0.4;
-}
-.image__list{
-    list-style: none;
-}
-.images__item{
-    cursor: move;
-    margin-bottom: 5px;
-}
-
-.ant-upload-list-item{
+.image__list .ant-upload-list-item{
     cursor: move;
 }
-.dragged .item {
-    opacity: 0.25;
-    background-color: #ccc;
-    border-top: 5px solid #999999;
-    border-bottom: 1px solid #ffffff;
-}
+
+/*.selected {*/
+/*    opacity: 0.4;*/
+/*}*/
+/*.image__list{*/
+/*    list-style: none;*/
+/*}*/
+/*.images__item{*/
+/*    cursor: move;*/
+/*    margin-bottom: 5px;*/
+/*}*/
+
+/*RLDD*/
+
+/*.dl-item.activity.dragged.hovered {*/
+/*    opacity: 0.25;*/
+/*}*/
+/*.image__list.floating {*/
+/*    box-sizing: border-box;*/
+/*    opacity: 0.25;*/
+/*    background-color: #cfc;*/
+/*}*/
+
+/*.image__list{*/
+/*     border: 5px solid #00f;*/
+/* }*/
+
+/*.dl-list{*/
+/*    border: 5px solid #999999;*/
+/*}*/
+

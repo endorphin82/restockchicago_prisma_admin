@@ -6,6 +6,8 @@ import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type UpdateOneProductVariables = {
   data: Types.ProductUpdateInput;
+  files?: Types.Maybe<Array<Types.Scalars['Upload']>>;
+  payloadEditProduct?: Types.Maybe<Types.Scalars['String']>;
   where: Types.ProductWhereUniqueInput;
 };
 
@@ -24,8 +26,8 @@ export type UpdateOneProduct = (
 
 
 export const UpdateOneProductDocument = gql`
-    mutation UpdateOneProduct($data: ProductUpdateInput!, $where: ProductWhereUniqueInput!) {
-  updateOneProduct(data: $data, where: $where) {
+    mutation UpdateOneProduct($data: ProductUpdateInput!, $files: [Upload!], $payloadEditProduct: String, $where: ProductWhereUniqueInput!) {
+  updateOneProduct(data: $data, files: $files, payloadEditProduct: $payloadEditProduct, where: $where) {
     id
     name
     price
@@ -58,6 +60,8 @@ export type UpdateOneProductMutationFn = ApolloReactCommon.MutationFunction<Upda
  * const [updateOneProduct, { data, loading, error }] = useUpdateOneProduct({
  *   variables: {
  *      data: // value for 'data'
+ *      files: // value for 'files'
+ *      payloadEditProduct: // value for 'payloadEditProduct'
  *      where: // value for 'where'
  *   },
  * });

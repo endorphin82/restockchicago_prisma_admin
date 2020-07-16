@@ -12,7 +12,6 @@ import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateO
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
 import ImageTable from './ImageTable'
-import categories_list from '../../reducer/categories-list'
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -24,8 +23,10 @@ interface PropsProductEditForm {
 const ProductEditForm: React.FC<any> = (
   {
     clearEditProduct, edited_product, categoryList,
-    isOpenEditProductModal, setIsOpenEditProductModal
+    isOpenEditProductModal, setIsOpenEditProductModal,
+    payloadEditProduct
   }) => {
+  const [fl, setFl] = useState<any>([])
   const [formEditProduct] = Form.useForm()
   const [updateProduct] = useUpdateOneProduct()
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
@@ -50,14 +51,23 @@ const ProductEditForm: React.FC<any> = (
     const { name, icon } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
-    // const category_id = Number(valuefromformlist.category_id)
+
+    console.log('Received values of form:', values)
+    const formData = new FormData()
+    // @ts-ignore
+    fl ?? valuefromformlist.files.forEach((file: any) => {
+      setFl((fl: any[]) => [...fl, file.originFileObj])
+      formData.append('files[]', file.originFileObj)
+    })
 
     updateProduct({
       variables: {
         data: { name, price, icon },
+        ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
-        }
+        },
+        payloadEditProduct
       }
     }).then(m => console.log('updateProductMESSAGE:', m))
       .catch(e => console.log('updateProductERROR:', e))
@@ -97,6 +107,28 @@ const ProductEditForm: React.FC<any> = (
   //   return category?.id !== REACT_APP_RECYCLE_BIN_ID
   // })
 
+  const normFile = (e: any) => {
+    console.log('Upload event:', e)
+    if (Array.isArray(e)) {
+      return e
+    }
+    return e && e.fileList
+  }
+
+  const propsUpload = {
+    multiple: true,
+    beforeUpload: (file: any) => {
+      setFl((fl: any[]) => [...fl, file])
+      return false
+    },
+    onRemove: (file: any) => {
+      const index = fl.indexOf(file)
+      const newFl = fl.slice()
+      newFl.splice(index, 1)
+      setFl([...newFl])
+    },
+    fl
+  }
   return (
     <Modal
       title={`Product information id: ${values.id}`}
@@ -106,7 +138,6 @@ const ProductEditForm: React.FC<any> = (
       // forceRender={true}
       // destroyOnClose={false}
     >
-
       <Form
         form={formEditProduct}
         name="product" {...formItemLayoutWithOutLabel}
@@ -123,7 +154,6 @@ const ProductEditForm: React.FC<any> = (
           rules={[{ required: true, message: 'Name product is required' }]}
         >
           <Input
-
             onChange={handleChange} placeholder="name product"
             style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
@@ -164,6 +194,19 @@ const ProductEditForm: React.FC<any> = (
         </Form.Item>
 
         <Form.Item
+          label="Add images"
+          name="files"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+        >
+          <Upload {...propsUpload} listType="picture">
+            <Button>
+              <UploadOutlined/> Select Images
+            </Button>
+          </Upload>
+        </Form.Item>
+
+        <Form.Item
           label="Icon"
           name="icon"
           // noStyle
@@ -178,17 +221,6 @@ const ProductEditForm: React.FC<any> = (
   )
 }
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 }
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 }
-  }
-}
-
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
@@ -199,13 +231,15 @@ const formItemLayoutWithOutLabel = {
 interface StateProps {
   isOpenEditProductModal: Boolean
   edited_product?: Product | {},
-  categoryList?: Category | {}
+  categoryList?: Category | {},
+  payloadEditProduct: string | undefined
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenEditProductModal: state.edit_product_modal.isOpen,
   edited_product: state.edit_product.product,
-  categoryList: state.categories_list.categories
+  categoryList: state.categories_list.categories,
+  payloadEditProduct: state.payload_edit_product.editProductPayload
 })
 
 export default connect<typeof ProductEditForm>(

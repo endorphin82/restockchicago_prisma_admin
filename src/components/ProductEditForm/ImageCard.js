@@ -13,9 +13,9 @@ const ImageCard = (props) => {
         style={props?.style}
         alt={props?.alt} className="ant-upload-list-item-image"/></a><span
         className="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1"
-        title="photo_2020-06-17 18.48.07.jpeg">{props?.pos}{props?.alt}</span><span
+        title="photo_2020-06-17 18.48.07.jpeg">id: {props?.id} pos: {props?.pos} {props?.alt}</span><span
         className="ant-upload-list-item-card-actions picture"><button title="Remove file" type="button"
-                                                                      onClick={() => props.handleDelete(props.pos)}
+                                                                      onClick={() => props.handleDelete(props.id)}
                                                                       className="ant-btn ant-upload-list-item-card-actions-btn ant-btn-text ant-btn-sm ant-btn-icon-only"><span
         role="img" aria-label="delete" tabIndex="-1" className="anticon anticon-delete"><svg viewBox="64 64 896 896"
                                                                                              focusable="false"
