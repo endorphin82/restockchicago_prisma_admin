@@ -126,6 +126,7 @@ const ProductEditForm: React.FC<any> = (
       setFl((fl: any[]) => [...fl, file])
       return false
     },
+    accept: "image/jpeg,image/png,image/gif",
     onRemove: (file: any) => {
       const index = fl.indexOf(file)
       const newFl = fl.slice()
