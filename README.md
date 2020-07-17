@@ -9,5 +9,6 @@ http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 
 https://codesandbox.io/s/k517m55m2v?autoresize=1&hidenavigation=1&file=/src/VerticalExample.tsx:923-928
 
+TODO: 
 
-TODO: upload filetype image
+if del last product clear array

@@ -45,9 +45,8 @@ const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProd
       }
       return it
     })
-
-      .filter((i) => i.id != id
-      ).map(
+      .filter((i) => i.id != id)
+      .map(
         (i, ind) => ({
           id: i.id,
           pos: ind,

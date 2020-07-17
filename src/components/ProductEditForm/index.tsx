@@ -82,7 +82,6 @@ const ProductEditForm: React.FC<any> = (
     console.log('valllll', e.target)
     setValues({ ...values, [name]: value })
   }
-
   const handleChangeSelect = (value: []) => {
     const conn = {
       connect: value.filter(v => {
@@ -100,7 +99,6 @@ const ProductEditForm: React.FC<any> = (
     }
     setValues({ ...values, 'cat': { ...cat } })
   }
-
   if (cat_loading) {
     return (<div>Loading...</div>)
   }
@@ -108,9 +106,6 @@ const ProductEditForm: React.FC<any> = (
     return (<div>Error...</div>)
   }
   const { categories } = cat_data
-  // const categoriesAllWithoutRecycleBin = categories?.filter((category) => {
-  //   return category?.id !== REACT_APP_RECYCLE_BIN_ID
-  // })
 
   const normFile = (e: any) => {
     console.log('Upload event:', e)
@@ -126,6 +121,7 @@ const ProductEditForm: React.FC<any> = (
       setFl((fl: any[]) => [...fl, file])
       return false
     },
+    accept: "image/jpeg,image/png,image/gif",
     onRemove: (file: any) => {
       const index = fl.indexOf(file)
       const newFl = fl.slice()
