@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Upload, message, Button, Form, Input, Modal, Select } from 'antd'
-import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
-import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
+import { Upload, message, InputNumber, Button, Form, Input, Modal, Select } from 'antd'
 import { connect } from 'react-redux'
 import { clearEditProduct, setIsOpenEditProductModal } from '../../actions'
-import { priceStringToIntCent } from '../../utils/utils'
+import { priceStringToIntCent, priceToDollars } from '../../utils/utils'
 import { RootState } from '../../reducer'
-import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
 import { Category, Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
@@ -39,7 +36,7 @@ const ProductEditForm: React.FC<any> = (
   useEffect(() => {
     formEditProduct.setFieldsValue({
       'name': edited_product.name,
-      'price': edited_product.price,
+      'price': priceToDollars(edited_product.price),
       'icon': edited_product.icon,
       'categories': edited_product.categories?.map((c: Category) => c.id)
     })
@@ -62,14 +59,17 @@ const ProductEditForm: React.FC<any> = (
 
     updateProduct({
       variables: {
-        data: { name, price, icon },
+        data: { name, price, icon, categories: values.cat },
         ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
         },
         payloadEditProduct
       }
-    }).then(m => console.log('updateProductMESSAGE:', m))
+    }).then(m => {
+      setFl([])
+      console.log('updateProductMESSAGE:', m)
+    })
       .catch(e => console.log('updateProductERROR:', e))
     setIsOpenEditProductModal(false)
   }
@@ -79,21 +79,26 @@ const ProductEditForm: React.FC<any> = (
   }
   const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
+    console.log('valllll', e.target)
     setValues({ ...values, [name]: value })
   }
 
   const handleChangeSelect = (value: []) => {
-    const cat = {
-      connect: value.map(v => {
-        return {
-          id: Number(v)
-        }
-      }),
+    const conn = {
+      connect: value.filter(v => {
+        return !edited_product.categories.some((it: any) => it.id == v)
+      }).map((conCat: Category) => ({ id: Number(conCat) }))
+    }
+    const discon = {
       disconnect: categoryList?.filter((cat: Category) => {
         return !value.some(item => item === cat.id)
       }).map((c: Category) => ({ id: Number(c.id) }))
     }
-    setValues({ ...values, 'categories': { ...cat } })
+    const cat = {
+      ...((conn.connect.length == 0) ? {} : conn),
+      ...((discon.disconnect.length == 0) ? {} : discon)
+    }
+    setValues({ ...values, 'cat': { ...cat } })
   }
 
   if (cat_loading) {
@@ -164,7 +169,11 @@ const ProductEditForm: React.FC<any> = (
           // noStyle
           rules={[{ required: true, message: 'Price is required' }]}
         >
-          <Input type="number" placeholder="Price $" style={{ width: '100%', marginRight: 8 }}/>
+          <Input
+            // @ts-ignore
+            onChange={handleChange}
+            placeholder="Price $"
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item

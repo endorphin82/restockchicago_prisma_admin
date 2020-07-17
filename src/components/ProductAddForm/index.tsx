@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Button, Form, Input, Modal, Select, Upload } from 'antd'
-import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
-import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
 import { setIsOpenAddProductModal } from '../../actions'
 import { priceStringToIntCent } from '../../utils/utils'
 import { RootState } from '../../reducer'
-import { Category, Product } from '../../__generated__/types'
+import { Product } from '../../__generated__/types'
 import { useCreateOneProduct } from '../Products/mutations/__generated__/CreateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons/lib'
@@ -93,7 +91,6 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
 
   const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
-    console.log('target', e.target)
     setValues({ ...values, [name]: value })
   }
 
@@ -212,7 +209,11 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProd
 
           // noStyle
         >
-          <Input name="icon" onChange={handleChange} placeholder="icon url" style={{ width: '100%', marginRight: 8 }}/>
+          <Input
+            name="icon"
+            onChange={handleChange}
+            placeholder="icon url"
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Url"
