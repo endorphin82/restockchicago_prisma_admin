@@ -37,21 +37,25 @@ const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProd
       )
     )
   }
-
   const onDelete = (id) => {
-    setNewOrderedItems(items => items.filter((i) => {
-      setDelFileNames( [...delFileNames, i.name])
-      return i.id != id
-    }).map(
-      (i, ind) => ({
-        id: i.id,
-        pos: ind,
-        name: i.name
-      })
-    ))
+    setNewOrderedItems(items => items.map(it => {
+      if (it.id === id) {
+        setDelFileNames([...delFileNames, it.name])
+        return it
+      }
+      return it
+    })
+
+      .filter((i) => i.id != id
+      ).map(
+        (i, ind) => ({
+          id: i.id,
+          pos: ind,
+          name: i.name
+        })
+      ))
   }
-  console.log('items', items)
-  console.log('delFileNames', delFileNames)
+
   return (items.length === 0) ? <Empty description="No Images"/> :
     (!edited_product || !isOpenEditProductModal)
       ? <div>Load..</div>
