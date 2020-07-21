@@ -67,11 +67,14 @@ const ProductEditForm: React.FC<any> = (
         payloadEditProduct
       }
     }).then(m => {
-      setFl([])
       console.log('updateProductMESSAGE:', m)
     })
       .catch(e => console.log('updateProductERROR:', e))
+      .finally(() => {
+        setFl([])
+      })
     setIsOpenEditProductModal(false)
+
   }
   const handleCancel = () => {
     setIsOpenEditProductModal(false)
@@ -121,7 +124,7 @@ const ProductEditForm: React.FC<any> = (
       setFl((fl: any[]) => [...fl, file])
       return false
     },
-    accept: "image/jpeg,image/png,image/gif",
+    accept: 'image/jpeg,image/png,image/gif',
     onRemove: (file: any) => {
       const index = fl.indexOf(file)
       const newFl = fl.slice()
