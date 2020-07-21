@@ -1,16 +1,16 @@
 import { ActionsTypes } from "../store"
-import { SEARCH_CATEGORIES_LIST } from "../actions/types"
+import { SEARCH_CATEGORIES_LIST_IDS } from "../actions/types"
 
 export type initialState = typeof initialState
 const initialState = {
-  searchCategories: []
+  searchCategoriesIds: []
 }
 
 export default (state: initialState = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
-    case SEARCH_CATEGORIES_LIST:
+    case SEARCH_CATEGORIES_LIST_IDS:
       // @ts-ignore
-      return { searchCategories: [...action.payload] }
+      return { searchCategoriesIds: [...action.payload] }
     default:
       return state
   }

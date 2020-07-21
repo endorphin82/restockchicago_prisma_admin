@@ -8,34 +8,32 @@ const { Option } = Select
 
 interface Props {
   categories: Category[] | [] | any
-  handleChange: (e: any) => any
-  searchCategories: Category[] | [] | undefined
+  onChange: (e: any) => any
+  searchCategoriesIds: Number[] | [] | undefined
 }
 
-const ProductsSelectByCategories: React.FC<any> = ({ categories, handleChange, searchCategories }) => {
-  console.log('categories', categories)
-
+const ProductsSelectByCategories: React.FC<any> = ({ categories, onChange, searchCategoriesIds }) => {
   return (
     <Select
       mode="multiple"
       // @ts-ignore
-      defaultValue={searchCategories.length === categories.length ? [] : searchCategories.map(c => c.id)}
+      defaultValue={searchCategoriesIds.length === categories.length ? [] : searchCategoriesIds}
       style={{ width: '30%' }}
       placeholder="Please select categories"
       // @ts-ignore
       onChange={(value: Number[]) => {
         // if categories empty, search all categories
-        return value?.length === 0 ?
-          handleChange(categories.map((cat: Category) => cat.id))
+        value.length === 0 ?
+          onChange(categories.map((cat: Category) => Number(cat.id)))
           :
-          handleChange(value)
+          onChange(value)
       }}
     >
       {categories?.map((cat: Category) => {
           // @ts-ignore
           return <Option
             // @ts-ignore
-            value={cat.id}
+            value={Number(cat.id)}
             key={cat?.id}>
             {cat?.name}
           </Option>
@@ -48,12 +46,12 @@ const ProductsSelectByCategories: React.FC<any> = ({ categories, handleChange, s
 
 interface StateProps {
   categories: String[]
-  searchCategories: String[]
+  searchCategoriesIds: Number[]
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   categories: state.categories_list.categories,
-  searchCategories: state.search_categories_list.searchCategories
+  searchCategoriesIds: state.search_categories_list_ids.searchCategoriesIds
 })
 
 export default connect<typeof ProductsSelectByCategories>(

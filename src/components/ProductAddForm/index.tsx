@@ -15,7 +15,7 @@ type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
   isOpenAddProductModal: Boolean
   searchName: String | void | undefined
-  searchCategories: String[] | [] | undefined
+  setSearchCategoriesIds: Number[] | [] | undefined
 }
 
 const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
@@ -258,7 +258,7 @@ interface StateProps {
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenAddProductModal: state.add_product_modal.isOpen,
   searchName: state.search_name.searchName,
-  searchCategories: state.search_categories_list.searchCategories
+  searchCategories: state.search_categories_list_ids.searchCategories
 })
 
 export default connect<typeof ProductAddForm>(
