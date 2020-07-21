@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { connect } from 'react-redux'
 import {
   editProduct,
-  setIsOpenEditProductModal, setSearchCategories,
+  setIsOpenEditProductModal, setSearchCategoriesIds,
   setSearchName
 } from '../../actions'
 import ProductsTableAntd from './ProductsTableAntd'
@@ -22,7 +22,7 @@ import { IProductsByNameAndCategoryIds } from '../Products/types'
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
-  setSearchCategories: (searchCategories: Number | Number[] | Category[] | [] | undefined) => void
+  setSearchCategoriesIds: (searchCategoriesIds: Number | Number[] | [] | undefined) => void
   setSearchName: (searchName: String | void | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
   categories: Category[] | [] | any
@@ -32,8 +32,8 @@ interface PropsProductsTable {
 
 const ProductsTable: React.FC<any> = (
   {
-    categories, editProduct, setIsOpenEditProductModal, setSearchCategory,
-    setSearchName, searchName, searchCategories
+    categories, editProduct, setIsOpenEditProductModal, setSearchCategoriesIds,
+    setSearchName, searchName, searchCategoriesIds
   }) => {
 
   // const [updateOneProduct] = useUpdateOneProduct(
@@ -72,8 +72,8 @@ const ProductsTable: React.FC<any> = (
         const { productsByNameAndCategoryIds } = cache.readQuery<IProductsByNameAndCategoryIds>({
           query: ProductsByNameAndCategoryIdsDocument,
           variables: {
-            name: searchName
-            // category_ids: searchCategories
+            name: searchName,
+            category_ids: searchCategoriesIds
             // category_ids: [1, 2]
           }
         })!.productsByNameAndCategoryIds
@@ -82,25 +82,24 @@ const ProductsTable: React.FC<any> = (
           data: {
             // if add product includes search categories, update cache query productsByNameAndCategoriesId
             // @ts-ignore
-            // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
+            // productsByNameAndCategoryId: deleteOneProduct.categories.every((cat: any) => searchCategoriesIds?.includes(cat)) ? productsByNameAndCategoryId?.filter(prod => deleteOneProduct.id !== prod.id) : productsByNameAndCategoryId
             productsByNameAndCategoryIds: productsByNameAndCategoryIds?.filter((prod: Product) => deleteOneProduct.id !== prod.id)
           }
         })
       }
       ,
       //// TODO:
-
       refetchQueries: [{
         query: ProductsByNameAndCategoryIdsDocument,
         variables: {
-          name: searchName
-          // category_ids: searchCategories.map((c: Category) => c.id)
+          name: searchName,
+          category_ids: searchCategoriesIds
         }
       }]
     }
   )
   useEffect(() => {
-    setSearchCategories(categories)
+    setSearchCategoriesIds(categories.map((cat: Category) => Number(cat.id)))
   }, [categories])
 
   console.log('productDeleted', productDeleted)
@@ -158,16 +157,16 @@ const ProductsTable: React.FC<any> = (
     }
   }
 
-  const handleChange = (value: Category[]) => {
-    setSearchCategories(value)
+  const handleChange = (value: Number[]) => {
+    console.log('asdasdasda', value)
+    setSearchCategoriesIds(value)
   }
 
   return (
     <>
       <ProductsSearch handleEnterSearch={handleEnterSearch}
                       handleSearch={handleSearch}/>
-      <ProductsSelectByCategories handleChange={handleChange}/>
-
+      <ProductsSelectByCategories onChange={handleChange}/>
       <ProductsTableAntd
         // @ts-ignore
         productsProp={productsByNameAndCategoryIds}
@@ -188,19 +187,19 @@ const ProductsTable: React.FC<any> = (
 interface StateProps {
   categories: String[]
   searchName: String
-  searchCategories: Category[]
+  searchCategoriesIds: Number[]
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   categories: state.categories_list.categories,
   searchName: state.search_name.searchName,
-  searchCategories: state.search_categories_list.searchCategories
+  searchCategoriesIds: state.search_categories_list_ids.searchCategoriesIds
 })
 export default connect<typeof ProductsTable>(
 // @ts-ignore
   mapStateToProps
   , {
-    setSearchCategories,
+    setSearchCategoriesIds,
     setSearchName,
     setIsOpenEditProductModal,
     editProduct

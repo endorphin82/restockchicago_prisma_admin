@@ -1,10 +1,10 @@
-import { Category, Product } from "../__generated__/types"
+import { Category, Product } from '../__generated__/types'
 import {
   CATEGORIES_LIST, CLEAR_EDIT_CATEGORY, CLEAR_EDIT_PRODUCT, EDIT_CATEGORY,
   EDIT_PRODUCT, IS_OPEN_ADD_CATEGORY_MODAL, IS_OPEN_ADD_PRODUCT_MODAL,
   IS_OPEN_EDIT_CATEGORY_MODAL, IS_OPEN_EDIT_PRODUCT_MODAL,
-  SEARCH_CATEGORIES_LIST, SEARCH_NAME, EDIT_PRODUCT_PAYLOAD
-} from "./types"
+  SEARCH_NAME, EDIT_PRODUCT_PAYLOAD, SEARCH_CATEGORIES_LIST_IDS
+} from './types'
 
 export const editProduct = (product: Product) => ({
   type: EDIT_PRODUCT,
@@ -25,8 +25,8 @@ export const categoriesList = (categories: Category[] | []) => ({
   payload: categories
 } as const)
 
-export const setSearchCategories = (searchCategories: Category[] | [] | undefined) => ({
-  type: SEARCH_CATEGORIES_LIST,
+export const setSearchCategoriesIds = (searchCategories: Number[] | [] | undefined) => ({
+  type: SEARCH_CATEGORIES_LIST_IDS,
   payload: searchCategories
 } as const)
 
