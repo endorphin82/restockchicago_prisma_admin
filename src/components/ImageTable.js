@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { REACT_APP_BASE_URL } from '../../actions/types'
+import { REACT_APP_BASE_URL } from '../actions/types'
 import ImageCard from './ImageCard'
 import RLDD from 'react-list-drag-and-drop/lib/RLDD'
 import { Empty } from 'antd'
-import { setPayloadEditProduct } from '../../actions'
 
-const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProduct }) => {
+
+const ImageTable = ({ isOpenEditProductModal, editedItem, setPayloadEditItem }) => {
   const [items, setNewOrderedItems] = useState([])
   const [delFileNames, setDelFileNames] = useState([])
   useEffect(() => {
-    setPayloadEditProduct(JSON.stringify({
+    setPayloadEditItem(JSON.stringify({
         img: items.map(({ pos, name }) => ({ pos, name })),
         del: [...delFileNames]
       })
     )
   }, [items, delFileNames])
   useEffect(() => {
-      setNewOrderedItems([...(!edited_product.img) ? [] : JSON.parse(edited_product?.img)?.map((i, ind) => {
+      setNewOrderedItems([...(!editedItem.img) ? [] : JSON.parse(editedItem?.img)?.map((i, ind) => {
           return {
             id: Number(i.pos),
             pos: ind,
@@ -26,7 +26,7 @@ const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProd
         })]
       )
     }
-    , [edited_product])
+    , [editedItem])
   const handleRLDDChange = (newItems) => {
     setNewOrderedItems(items => newItems.map(
       (i, ind) => ({
@@ -56,7 +56,7 @@ const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProd
   }
 
   return (items.length === 0) ? <Empty description="No Images"/> :
-    (!edited_product || !isOpenEditProductModal)
+    (!editedItem || !isOpenEditProductModal)
       ? <div>Load..</div>
       : <RLDD cssClasses='image__list'
               onChange={handleRLDDChange}
@@ -79,11 +79,10 @@ const ImageTable = ({ isOpenEditProductModal, edited_product, setPayloadEditProd
 
 
 const mapStateToProps = (state) => ({
-  isOpenEditProductModal: state.edit_product_modal.isOpen,
-  edited_product: state.edit_product.product
+  isOpenEditProductModal: state.edit_product_modal.isOpen
 })
 
 export default connect(
 // @ts-ignore
-  mapStateToProps, { setPayloadEditProduct }
+  mapStateToProps
 )(ImageTable)

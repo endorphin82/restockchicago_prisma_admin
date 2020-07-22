@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Upload, message, InputNumber, Button, Form, Input, Modal, Select } from 'antd'
 import { connect } from 'react-redux'
-import { clearEditProduct, setIsOpenEditProductModal } from '../../actions'
+import { clearEditProduct, setIsOpenEditProductModal, setPayloadEditProduct } from '../../actions'
 import { priceStringToIntCent, priceToDollars } from '../../utils/utils'
 import { RootState } from '../../reducer'
 import { Category, Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
 import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
-import ImageTable from './ImageTable'
+import ImageTable from '../ImageTable'
+import TextArea from 'antd/lib/input/TextArea'
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -21,7 +22,7 @@ const ProductEditForm: React.FC<any> = (
   {
     clearEditProduct, edited_product, categoryList,
     isOpenEditProductModal, setIsOpenEditProductModal,
-    payloadEditProduct
+    payloadEditProduct, setPayloadEditProduct
   }) => {
   const [fl, setFl] = useState<any>([])
   const [formEditProduct] = Form.useForm()
@@ -38,6 +39,7 @@ const ProductEditForm: React.FC<any> = (
       'name': edited_product.name,
       'price': priceToDollars(edited_product.price),
       'icon': edited_product.icon,
+      'description': edited_product.description,
       'categories': edited_product.categories?.map((c: Category) => c.id)
     })
     return () => {
@@ -45,7 +47,7 @@ const ProductEditForm: React.FC<any> = (
     }
   }, [edited_product, formEditProduct])
   const onFinish = (valuefromformlist: Product) => {
-    const { name, icon } = valuefromformlist
+    const { name, icon, description } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
 
@@ -59,7 +61,7 @@ const ProductEditForm: React.FC<any> = (
 
     updateProduct({
       variables: {
-        data: { name, price, icon, categories: values.cat },
+        data: { name, price, icon, description, categories: values.cat },
         ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
@@ -80,7 +82,7 @@ const ProductEditForm: React.FC<any> = (
     setIsOpenEditProductModal(false)
     clearEditProduct()
   }
-  const handleChange = (e: { target: HTMLInputElement }) => {
+  const handleChange = (e: { target: any }) => {
     const { name, value } = e.target
     console.log('valllll', e.target)
     setValues({ ...values, [name]: value })
@@ -198,7 +200,9 @@ const ProductEditForm: React.FC<any> = (
         </Form.Item>
 
         <Form.Item name="images" style={{ width: '100%' }}>
-          <ImageTable/>
+          <ImageTable
+            setPayloadEditItem={setPayloadEditProduct}
+            editedItem={edited_product}/>
         </Form.Item>
 
         <Form.Item
@@ -220,6 +224,14 @@ const ProductEditForm: React.FC<any> = (
           // noStyle
         >
           <Input onChange={handleChange} placeholder="icon url" style={{ width: '100%', marginRight: 8 }}/>
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+          // noStyle
+        >
+          <TextArea  onChange={handleChange} maxLength={180} placeholder="description" rows={3}
+                    style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
         <Button type="primary" htmlType="submit">
           Submit
@@ -254,5 +266,5 @@ export default connect<typeof ProductEditForm>(
   // TODO:
 // @ts-ignore
   mapStateToProps,
-  { setIsOpenEditProductModal, clearEditProduct }
+  {setPayloadEditProduct, setIsOpenEditProductModal, clearEditProduct }
 )(ProductEditForm)

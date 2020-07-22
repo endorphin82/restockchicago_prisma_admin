@@ -19,7 +19,7 @@ export type Category = {
   description?: Maybe<Scalars['String']>;
   products: Array<Product>;
   icon: Scalars['String'];
-  images: Array<ImageCat>;
+  img?: Maybe<Scalars['String']>;
 };
 
 
@@ -30,22 +30,15 @@ export type CategoryProductsArgs = {
   after?: Maybe<ProductWhereUniqueInput>;
 };
 
-
-export type CategoryImagesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<ImageCatWhereUniqueInput>;
-  after?: Maybe<ImageCatWhereUniqueInput>;
-};
-
 export type CategoryCreateInput = {
   description?: Maybe<Scalars['String']>;
   icon: Scalars['String'];
   name: Scalars['String'];
   parent?: Maybe<Scalars['Int']>;
   url: Scalars['String'];
-  images?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
+  img?: Maybe<Scalars['String']>;
   products?: Maybe<ProductCreateManyWithoutCategoriesInput>;
+  ImageCat?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
 };
 
 export type CategoryCreateManyWithoutProductsInput = {
@@ -59,7 +52,8 @@ export type CategoryCreateWithoutProductsInput = {
   name: Scalars['String'];
   parent?: Maybe<Scalars['Int']>;
   url: Scalars['String'];
-  images?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
+  img?: Maybe<Scalars['String']>;
+  ImageCat?: Maybe<ImageCatCreateManyWithoutCategoryInput>;
 };
 
 export type CategoryFilter = {
@@ -75,8 +69,9 @@ export type CategoryScalarWhereInput = {
   name?: Maybe<StringFilter>;
   parent?: Maybe<NullableIntFilter>;
   url?: Maybe<StringFilter>;
-  images?: Maybe<ImageCatFilter>;
+  img?: Maybe<NullableStringFilter>;
   products?: Maybe<ProductFilter>;
+  ImageCat?: Maybe<ImageCatFilter>;
   AND?: Maybe<Array<CategoryScalarWhereInput>>;
   OR?: Maybe<Array<CategoryScalarWhereInput>>;
   NOT?: Maybe<Array<CategoryScalarWhereInput>>;
@@ -89,8 +84,9 @@ export type CategoryUpdateInput = {
   name?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['Int']>;
   url?: Maybe<Scalars['String']>;
-  images?: Maybe<ImageCatUpdateManyWithoutCategoryInput>;
+  img?: Maybe<Scalars['String']>;
   products?: Maybe<ProductUpdateManyWithoutCategoriesInput>;
+  ImageCat?: Maybe<ImageCatUpdateManyWithoutCategoryInput>;
 };
 
 export type CategoryUpdateManyDataInput = {
@@ -100,6 +96,7 @@ export type CategoryUpdateManyDataInput = {
   name?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['Int']>;
   url?: Maybe<Scalars['String']>;
+  img?: Maybe<Scalars['String']>;
 };
 
 export type CategoryUpdateManyWithoutProductsInput = {
@@ -126,7 +123,8 @@ export type CategoryUpdateWithoutProductsDataInput = {
   name?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['Int']>;
   url?: Maybe<Scalars['String']>;
-  images?: Maybe<ImageCatUpdateManyWithoutCategoryInput>;
+  img?: Maybe<Scalars['String']>;
+  ImageCat?: Maybe<ImageCatUpdateManyWithoutCategoryInput>;
 };
 
 export type CategoryUpdateWithWhereUniqueWithoutProductsInput = {
@@ -147,8 +145,9 @@ export type CategoryWhereInput = {
   name?: Maybe<StringFilter>;
   parent?: Maybe<NullableIntFilter>;
   url?: Maybe<StringFilter>;
-  images?: Maybe<ImageCatFilter>;
+  img?: Maybe<NullableStringFilter>;
   products?: Maybe<ProductFilter>;
+  ImageCat?: Maybe<ImageCatFilter>;
   AND?: Maybe<Array<CategoryWhereInput>>;
   OR?: Maybe<Array<CategoryWhereInput>>;
   NOT?: Maybe<Array<CategoryWhereInput>>;
@@ -166,14 +165,6 @@ export type File = {
   name: Scalars['String'];
   status: Scalars['String'];
   url: Scalars['String'];
-};
-
-export type ImageCat = {
-  __typename?: 'ImageCat';
-  id: Scalars['Int'];
-  url: Scalars['String'];
-  category?: Maybe<Category>;
-  category_id?: Maybe<Scalars['Int']>;
 };
 
 export type ImageCatCreateManyWithoutCategoryInput = {

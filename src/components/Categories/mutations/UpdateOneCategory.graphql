@@ -7,10 +7,7 @@ $where: CategoryWhereUniqueInput! ) {
         url
         parent
         icon
-        images{
-            id
-            url
-        }
+        img
         products{
             id
             name

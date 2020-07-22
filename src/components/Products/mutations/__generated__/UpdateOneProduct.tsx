@@ -16,10 +16,10 @@ export type UpdateOneProduct = (
   { __typename: 'Mutation' }
   & { updateOneProduct: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img' | 'description'>
     & { categories: Array<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
+      & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
     )> }
   ) }
 );
@@ -33,6 +33,7 @@ export const UpdateOneProductDocument = gql`
     price
     icon
     img
+    description
     categories {
       id
       name
@@ -40,6 +41,7 @@ export const UpdateOneProductDocument = gql`
       url
       parent
       icon
+      img
     }
   }
 }

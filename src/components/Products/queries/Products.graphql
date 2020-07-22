@@ -5,6 +5,7 @@ query Products{
         price
         icon
         img
+        description
         categories{
             id
             name
@@ -12,10 +13,7 @@ query Products{
             url
             description
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }

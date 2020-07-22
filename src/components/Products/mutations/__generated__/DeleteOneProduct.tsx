@@ -13,7 +13,7 @@ export type DeleteOneProduct = (
   { __typename: 'Mutation' }
   & { deleteOneProduct: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img' | 'description'>
   ) }
 );
 
@@ -26,6 +26,7 @@ export const DeleteOneProductDocument = gql`
     price
     icon
     img
+    description
   }
 }
     `;

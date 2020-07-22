@@ -57,8 +57,8 @@ const ProductsTable: React.FC<any> = (
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoryIds(
     {
       variables: {
-        name: searchName as string
-        // category_ids: categories.map((c: Category) => Number(c.id))
+        name: searchName as string,
+        category_ids: (searchCategoriesIds.length !== 0) ? searchCategoriesIds : categories.map((c: Category) => Number(c.id))
       }
     }
   )

@@ -13,11 +13,8 @@ export type DeleteOneCategory = (
   { __typename: 'Mutation' }
   & { deleteOneCategory?: Types.Maybe<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-    & { images: Array<(
-      { __typename: 'ImageCat' }
-      & Pick<Types.ImageCat, 'id' | 'url'>
-    )>, products: Array<(
+    & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
+    & { products: Array<(
       { __typename: 'Product' }
       & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     )> }
@@ -34,10 +31,7 @@ export const DeleteOneCategoryDocument = gql`
     url
     parent
     icon
-    images {
-      id
-      url
-    }
+    img
     products {
       id
       name

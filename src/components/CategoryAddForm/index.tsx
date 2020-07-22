@@ -55,7 +55,7 @@ const CategoryAddForm: React.FC<any> = (
   // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { icon, description, images, url, name } = values
+    const { icon, description, img, url, name } = values
     // const _id = String(values._id)
     // const name = String(valuefromformlist.name)
     console.log("++++++++++++",
@@ -72,7 +72,7 @@ const CategoryAddForm: React.FC<any> = (
           description,
           url,
           icon,
-          images,
+          img,
           parent: valuefromformlist.parent
         }
       }

@@ -13,14 +13,10 @@ export type ProductByName = (
   { __typename: 'Query' }
   & { productByName: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img' | 'description'>
     & { categories: Array<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'parent' | 'url' | 'description' | 'icon'>
-      & { images: Array<(
-        { __typename: 'ImageCat' }
-        & Pick<Types.ImageCat, 'id' | 'url'>
-      )> }
+      & Pick<Types.Category, 'id' | 'name' | 'parent' | 'url' | 'description' | 'icon' | 'img'>
     )> }
   ) }
 );
@@ -34,6 +30,7 @@ export const ProductByNameDocument = gql`
     price
     icon
     img
+    description
     categories {
       id
       name
@@ -41,10 +38,7 @@ export const ProductByNameDocument = gql`
       url
       description
       icon
-      images {
-        id
-        url
-      }
+      img
     }
   }
 }

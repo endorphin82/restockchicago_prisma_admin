@@ -21,15 +21,26 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       dataIndex: 'name',
       key: 'name'
     },
+    // {
+    //   title: 'Description',
+    //   dataIndex: 'description',
+    //   key: 'description',
+    //   width: 150,
+    //   render: (description: string) => {
+    //     return <div style={{ fontSize: '11px' }}>{description}</div>
+    //   }
+    // },
     {
       title: 'ID',
       dataIndex: 'id',
-      key: 'id'
+      key: 'id',
+      sorter: (a: any, b: any) => a.id - b.id
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
+      sorter: (a: any, b: any) => a.price - b.price,
       render: (price: Number) => {
         return priceToDollars(price)
       }
@@ -110,6 +121,10 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
         // @ts-ignore
         dataSource={productsProp}
         columns={columns}
+        expandable={{
+          expandedRowRender: record => <span style={{ margin: 0 }}><strong>Description: </strong>{record.description}</span>,
+          rowExpandable: record => record.description
+        }}
         rowKey="id"/>
     </>
   )

@@ -5,6 +5,7 @@ query ProductsByCategoryId($category_id: Int!){
         price
         icon
         img
+        description
         categories{
             id
             name
@@ -12,10 +13,7 @@ query ProductsByCategoryId($category_id: Int!){
             url
             description
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }

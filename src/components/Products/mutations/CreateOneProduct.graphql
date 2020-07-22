@@ -5,6 +5,7 @@ mutation CreateOneProduct( $files: [Upload!], $data: ProductCreateInput! ) {
         price
         icon
         img
+        description
         categories{
             id
             name
@@ -12,10 +13,7 @@ mutation CreateOneProduct( $files: [Upload!], $data: ProductCreateInput! ) {
             url
             parent
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }
