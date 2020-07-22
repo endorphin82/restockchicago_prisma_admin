@@ -36,7 +36,7 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
     formEditCategory.setFieldsValue({
       'name': edited_category.name,
       'icons': edited_category.icon,
-      'images': edited_category.images,
+      // 'images': edited_category.images,
       'parent': edited_category.parent,
       'id': edited_category.id
     })
@@ -60,7 +60,7 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
   // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { name, images, icon, parent } = valuefromformlist
+    const { name, img, icon, parent } = valuefromformlist
     const id = Number(values?.id)
 
     updateOneCategory({

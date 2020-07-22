@@ -61,7 +61,7 @@ const TabsContainer: React.FC<any> = ({ categoriesList }) => {
         <Products/>
       </Tabs.TabPane>
       <TabPane tab="Categories" key="2">
-        <Categories/>
+        {/*<Categories/>*/}
       </TabPane>
       {/*<TabPane tab={*/}
       {/*  <span>*/}

@@ -11,20 +11,13 @@ export type Categories = (
   { __typename: 'Query' }
   & { categories: Array<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-    & { images: Array<(
-      { __typename: 'ImageCat' }
-      & Pick<Types.ImageCat, 'id' | 'url'>
-    )>, products: Array<(
+    & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
+    & { products: Array<(
       { __typename: 'Product' }
-      & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+      & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img' | 'description'>
       & { categories: Array<(
         { __typename: 'Category' }
-        & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-        & { images: Array<(
-          { __typename: 'ImageCat' }
-          & Pick<Types.ImageCat, 'id' | 'url'>
-        )> }
+        & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
       )> }
     )> }
   )> }
@@ -40,16 +33,14 @@ export const CategoriesDocument = gql`
     url
     parent
     icon
-    images {
-      id
-      url
-    }
+    img
     products {
       id
       name
       price
       icon
       img
+      description
       categories {
         id
         name
@@ -57,10 +48,7 @@ export const CategoriesDocument = gql`
         url
         parent
         icon
-        images {
-          id
-          url
-        }
+        img
       }
     }
   }

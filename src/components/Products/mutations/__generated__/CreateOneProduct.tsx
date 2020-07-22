@@ -14,14 +14,10 @@ export type CreateOneProduct = (
   { __typename: 'Mutation' }
   & { createOneProduct: (
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img' | 'description'>
     & { categories: Array<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon'>
-      & { images: Array<(
-        { __typename: 'ImageCat' }
-        & Pick<Types.ImageCat, 'id' | 'url'>
-      )> }
+      & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
     )> }
   ) }
 );
@@ -35,6 +31,7 @@ export const CreateOneProductDocument = gql`
     price
     icon
     img
+    description
     categories {
       id
       name
@@ -42,10 +39,7 @@ export const CreateOneProductDocument = gql`
       url
       parent
       icon
-      images {
-        id
-        url
-      }
+      img
     }
   }
 }

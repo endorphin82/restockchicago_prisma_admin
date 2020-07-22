@@ -5,6 +5,7 @@ query ProductsByNameAndCategoryIds($name: String!, $category_ids: [Int!]){
         price
         icon
         img
+        description
         categories{
             id
             name
@@ -12,10 +13,7 @@ query ProductsByNameAndCategoryIds($name: String!, $category_ids: [Int!]){
             url
             description
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }

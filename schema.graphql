@@ -9,7 +9,7 @@ type Category {
   description: String
   icon: String!
   id: Int!
-  images(after: ImageCatWhereUniqueInput, before: ImageCatWhereUniqueInput, first: Int, last: Int): [ImageCat!]!
+  img: String
   name: String!
   parent: Int
   products(after: ProductWhereUniqueInput, before: ProductWhereUniqueInput, first: Int, last: Int): [Product!]!
@@ -20,13 +20,6 @@ type File {
   name: String!
   status: String!
   uid: String!
-  url: String!
-}
-
-type ImageCat {
-  category: Category
-  category_id: Int
-  id: Int!
   url: String!
 }
 
@@ -66,9 +59,10 @@ type Query {
 }
 
 input CategoryCreateInput {
+  ImageCat: ImageCatCreateManyWithoutCategoryInput
   description: String
   icon: String!
-  images: ImageCatCreateManyWithoutCategoryInput
+  img: String
   name: String!
   parent: Int
   products: ProductCreateManyWithoutCategoriesInput
@@ -81,9 +75,10 @@ input CategoryCreateManyWithoutProductsInput {
 }
 
 input CategoryCreateWithoutProductsInput {
+  ImageCat: ImageCatCreateManyWithoutCategoryInput
   description: String
   icon: String!
-  images: ImageCatCreateManyWithoutCategoryInput
+  img: String
   name: String!
   parent: Int
   url: String!
@@ -97,12 +92,13 @@ input CategoryFilter {
 
 input CategoryScalarWhereInput {
   AND: [CategoryScalarWhereInput!]
+  ImageCat: ImageCatFilter
   NOT: [CategoryScalarWhereInput!]
   OR: [CategoryScalarWhereInput!]
   description: NullableStringFilter
   icon: StringFilter
   id: IntFilter
-  images: ImageCatFilter
+  img: NullableStringFilter
   name: StringFilter
   parent: NullableIntFilter
   products: ProductFilter
@@ -110,10 +106,11 @@ input CategoryScalarWhereInput {
 }
 
 input CategoryUpdateInput {
+  ImageCat: ImageCatUpdateManyWithoutCategoryInput
   description: String
   icon: String
   id: Int
-  images: ImageCatUpdateManyWithoutCategoryInput
+  img: String
   name: String
   parent: Int
   products: ProductUpdateManyWithoutCategoriesInput
@@ -124,6 +121,7 @@ input CategoryUpdateManyDataInput {
   description: String
   icon: String
   id: Int
+  img: String
   name: String
   parent: Int
   url: String
@@ -152,10 +150,11 @@ input CategoryUpdateWithWhereUniqueWithoutProductsInput {
 }
 
 input CategoryUpdateWithoutProductsDataInput {
+  ImageCat: ImageCatUpdateManyWithoutCategoryInput
   description: String
   icon: String
   id: Int
-  images: ImageCatUpdateManyWithoutCategoryInput
+  img: String
   name: String
   parent: Int
   url: String
@@ -169,12 +168,13 @@ input CategoryUpsertWithWhereUniqueWithoutProductsInput {
 
 input CategoryWhereInput {
   AND: [CategoryWhereInput!]
+  ImageCat: ImageCatFilter
   NOT: [CategoryWhereInput!]
   OR: [CategoryWhereInput!]
   description: NullableStringFilter
   icon: StringFilter
   id: IntFilter
-  images: ImageCatFilter
+  img: NullableStringFilter
   name: StringFilter
   parent: NullableIntFilter
   products: ProductFilter

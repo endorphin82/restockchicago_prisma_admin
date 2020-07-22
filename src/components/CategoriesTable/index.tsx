@@ -7,8 +7,10 @@ import { setIsOpenEditCategoryModal } from '../../actions'
 import { connect } from 'react-redux'
 import { useCategories, CategoriesDocument } from '../Categories/queries/__generated__/Categories'
 import { useDeleteOneCategory } from '../Categories/mutations/__generated__/DeleteOneCategory'
+import { REACT_APP_BASE_URL } from '../../actions/types'
 
 const styleIconInTable = { width: '20px', height: '100%', marginRight: '10px' }
+const styleImagesInTable = { width: '20px', height: '100%', marginRight: '10px' }
 
 export interface PropsCategoryTable {
   editCategory: (product: Product | undefined) => void
@@ -75,8 +77,8 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
     },
     {
       title: 'ID',
-      dataIndex: '_id',
-      key: '_id'
+      dataIndex: 'id',
+      key: 'id'
     },
     {
       title: 'Parent',
@@ -90,35 +92,40 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
       }
     },
     {
-      title: 'Icons',
-      dataIndex: 'icons',
-      key: 'icons',
+      title: 'Icon',
+      dataIndex: 'icon',
+      key: 'icon',
       render: (icon: String) => {
         return icon
           ? <div>
-
             <img
               key={String(icon)} alt="img"
-              src={String(icon)}
+              src={`${REACT_APP_BASE_URL}/images/${icon}`}
               style={styleIconInTable}/>
-            )
           </div>
           : <span>no icons</span>
       }
     },
     {
       title: 'Images',
-      dataIndex: 'images',
-      key: 'images',
-      render: (icons: String[]) => {
-        return (icons.length !== 0)
+      dataIndex: 'img',
+      key: 'img',
+      render: (img: String) => {
+        let images = []
+        if (img) {
+          // @ts-ignore
+          const imgs = JSON.parse(img)
+          images = imgs.map((i: any) => i['name'])
+        }
+        return (images.length !== 0)
           ? <div>
             {
-              icons
-                .map(image => <img
-                  key={String(image)} alt="img"
-                  src={String(image)}
-                  style={styleIconInTable}/>
+              images
+                .map((image: string, index: number) => <img
+                  key={String(`${image}+${index}`)}
+                  alt="img"
+                  src={`${REACT_APP_BASE_URL}/images/${image}`}
+                  style={styleImagesInTable}/>
                 )
             }
           </div>

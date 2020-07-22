@@ -6,10 +6,7 @@ mutation CreateOneCategory($data: CategoryCreateInput! ) {
         url
         parent
         icon
-        images{
-            id
-            url
-        }
+        img
         products{
             id
             name

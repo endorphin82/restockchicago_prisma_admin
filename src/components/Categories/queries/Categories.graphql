@@ -1,33 +1,28 @@
 query Categories{
-    categories{
+  categories{
+    id
+    name
+    description
+    url
+    parent
+    icon
+    img
+    products{
+      id
+      name
+      price
+      icon
+      img
+      description
+      categories{
         id
         name
         description
         url
         parent
         icon
-        images{
-            id
-            url
-        }
-        products{
-            id
-            name
-            price
-            icon
-            img
-            categories{
-                id
-                name
-                description
-                url
-                parent
-                icon
-                images{
-                    id
-                    url
-                }
-            }
-        }
+        img
+      }
     }
+  }
 }

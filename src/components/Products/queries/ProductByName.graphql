@@ -5,6 +5,7 @@ query ProductByName($name: String!){
         price
         icon
         img
+        description
         categories{
             id
             name
@@ -12,10 +13,7 @@ query ProductByName($name: String!){
             url
             description
             icon
-            images{
-                id
-                url
-            }
+            img
         }
     }
 }
