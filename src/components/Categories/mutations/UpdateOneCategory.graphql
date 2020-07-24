@@ -1,19 +1,19 @@
-mutation UpdateOneCategory($data: CategoryUpdateInput!,
-$where: CategoryWhereUniqueInput! ) {
-    updateOneCategory(data: $data, where: $where){
-        id
-        name
-        description
-        url
-        parent
-        icon
-        img
-        products{
-            id
-            name
-            price
-            icon
-            img
-        }
+mutation UpdateOneCategory($data: CategoryUpdateInput!, $files: [Upload!],
+  $where: CategoryWhereUniqueInput! ) {
+  updateOneCategory(data: $data, files: $files, where: $where){
+    id
+    name
+    description
+    url
+    parent
+    icon
+    img
+    products{
+      id
+      name
+      price
+      icon
+      img
     }
+  }
 }

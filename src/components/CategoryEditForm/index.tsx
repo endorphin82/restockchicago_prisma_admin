@@ -28,6 +28,7 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
       }
     ]
   })
+
   const [values, setValues] = useState<Category | any>({})
   useEffect(() => {
     setValues(edited_category)
@@ -35,8 +36,7 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
   useEffect(() => {
     formEditCategory.setFieldsValue({
       'name': edited_category.name,
-      'icons': edited_category.icon,
-      // 'images': edited_category.images,
+      'description': edited_category.description,
       'parent': edited_category.parent,
       'id': edited_category.id
     })
@@ -127,6 +127,17 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
         </Form.Item>
 
         <Form.Item
+          label="Description category"
+          name="description"
+          // @ts-ignore
+          value={String(values?.description)}
+        >
+          <Input
+            onChange={handleChange} placeholder="Description category"
+            style={{ width: '100%', marginRight: 8 }}/>
+        </Form.Item>
+
+        <Form.Item
           label="Parent category"
           name="parent"
           // TODO:
@@ -149,57 +160,6 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
           </Select>
         </Form.Item>
 
-        <Form.List name="icon">
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? 'icons' : ''}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={['onChange', 'onBlur']}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: 'Please input icons url or delete this field.'
-                        }
-                      ]}
-                      noStyle
-                    >
-                      <Input value={values.icons[index]} placeholder="icon url"
-                             style={{ width: '90%', marginRight: 8 }}/>
-                    </Form.Item>
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => {
-                          remove(field.name)
-                        }}
-                      />
-                    ) : <span/>}
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add()
-                    }}
-                    style={{ width: '80%' }}
-                  >
-                    <PlusOutlined/> Add icon url
-                  </Button>
-                </Form.Item>
-              </div>
-            )
-          }}
-        </Form.List>
         <Form.List name="images">
           {(fields, { add, remove }) => {
             return (

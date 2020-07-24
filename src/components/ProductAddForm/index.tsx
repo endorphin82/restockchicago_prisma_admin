@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Button, Form, Input, Modal, Select, Upload } from 'antd'
 import { setIsOpenAddProductModal } from '../../actions'
-import { priceStringToIntCent } from '../../utils/utils'
+import {
+  priceStringToIntCent,
+  useSetFilesFromForm,
+  useSetValuesFromForm,
+  normFile,
+
+} from '../../utils/utils'
 import { RootState } from '../../reducer'
 import { Category, Product } from '../../__generated__/types'
 import { useCreateOneProduct } from '../Products/mutations/__generated__/CreateOneProduct'
@@ -21,7 +27,7 @@ type PropsProductAddForm = {
 }
 
 const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setIsOpenAddProductModal, searchName, searchCategoriesIds }) => {
-  const [fl, setFl] = useState<any>([])
+  const { fl, setFilesFromForm, propsUpload } = useSetFilesFromForm()
   console.log('searchCategories', searchCategoriesIds)
   const [createOneProduct] = useCreateOneProduct({
       //   // TODO:
@@ -32,7 +38,6 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setI
           variables: {
             name: searchName,
             category_ids: (searchCategoriesIds.length !== 0) ? searchCategoriesIds : categories.map((c: Category) => Number(c.id))
-
           }
         })!.productsByNameAndCategoryIds
         cache.writeQuery({
@@ -57,22 +62,10 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setI
       ]
     }
   )
-  // const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
-  const [values, setValues] = useState<Product | any>({})
-
+  const { values, setValues, handleChange } = useSetValuesFromForm()
   const onFinish = (valuefromformlist: any) => {
-    console.log('Received values of form:', values)
-    const formData = new FormData()
-    fl ?? valuefromformlist.files.forEach((file: any) => {
-      setFl((fl: any[]) => [...fl, file.originFileObj])
-      formData.append('files[]', file.originFileObj)
-    })
-
-    console.log('fl', fl)
-    console.log('valuefromformlist', valuefromformlist)
+    setFilesFromForm(valuefromformlist)
     const price = priceStringToIntCent(values.price)
-    console.log('onFinish')
-
     createOneProduct({
       variables: {
         data: {
@@ -83,17 +76,11 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setI
       }
     }).then(m => console.log('createOneProduct:', m))
       .catch(e => console.log('addProductERROR:', e))
-
     setIsOpenAddProductModal(false)
   }
 
   const handleCancel = () => {
     setIsOpenAddProductModal(false)
-  }
-
-  const handleChange = (e: { target: any }) => {
-    const { name, value } = e.target
-    setValues({ ...values, [name]: value })
   }
 
   const handleChangeSelect = (value: string[]) => {
@@ -107,40 +94,7 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setI
     setValues({ ...values, 'categories': { ...cat } })
   }
 
-  // if (cat_loading) {
-  //   return (<div>Loading...</div>)
-  // }
-  // if (cat_error || !cat_data) {
-  //   return (<div>Error...</div>)
-  // }
-  // const { categories } = cat_data
-  // const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
-  //   return category?._id !== REACT_APP_RECYCLE_BIN_ID
-  // })
-
-  const normFile = (e: any) => {
-    console.log('Upload event:', e)
-    if (Array.isArray(e)) {
-      return e
-    }
-    return e && e.fileList
-  }
-
-  const propsUpload = {
-    multiple: true,
-    beforeUpload: (file: any) => {
-      setFl((fl: any[]) => [...fl, file])
-      return false
-    },
-    accept: "image/jpeg,image/png,image/gif",
-    onRemove: (file: any) => {
-      const index = fl.indexOf(file)
-      const newFl = fl.slice()
-      newFl.splice(index, 1)
-      setFl([...newFl])
-    },
-    fl
-  }
+  // const propsUpload = propsUploadF(setFl, fl)
 
   return (
     <Modal
@@ -227,7 +181,8 @@ const ProductAddForm: React.FC<any> = ({ isOpenAddProductModal, categories, setI
           label="Description"
           // noStyle
         >
-          <TextArea name="description" onChange={handleChange} maxLength={180} placeholder="description" rows={3} style={{ width: '100%', marginRight: 8 }}/>
+          <TextArea name="description" onChange={handleChange} maxLength={180} placeholder="description" rows={3}
+                    style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
         <Button type="primary" htmlType="submit">
           Submit

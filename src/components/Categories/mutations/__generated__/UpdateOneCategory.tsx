@@ -6,26 +6,27 @@ import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type UpdateOneCategoryVariables = {
   data: Types.CategoryUpdateInput;
+  files?: Types.Maybe<Array<Types.Scalars['Upload']>>;
   where: Types.CategoryWhereUniqueInput;
 };
 
 
 export type UpdateOneCategory = (
   { __typename: 'Mutation' }
-  & { updateOneCategory?: Types.Maybe<(
+  & { updateOneCategory: (
     { __typename: 'Category' }
     & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
     & { products: Array<(
       { __typename: 'Product' }
       & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     )> }
-  )> }
+  ) }
 );
 
 
 export const UpdateOneCategoryDocument = gql`
-    mutation UpdateOneCategory($data: CategoryUpdateInput!, $where: CategoryWhereUniqueInput!) {
-  updateOneCategory(data: $data, where: $where) {
+    mutation UpdateOneCategory($data: CategoryUpdateInput!, $files: [Upload!], $where: CategoryWhereUniqueInput!) {
+  updateOneCategory(data: $data, files: $files, where: $where) {
     id
     name
     description
@@ -59,6 +60,7 @@ export type UpdateOneCategoryMutationFn = ApolloReactCommon.MutationFunction<Upd
  * const [updateOneCategory, { data, loading, error }] = useUpdateOneCategory({
  *   variables: {
  *      data: // value for 'data'
+ *      files: // value for 'files'
  *      where: // value for 'where'
  *   },
  * });

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Upload, message, InputNumber, Button, Form, Input, Modal, Select } from 'antd'
 import { connect } from 'react-redux'
 import { clearEditProduct, setIsOpenEditProductModal, setPayloadEditProduct } from '../../actions'
-import { priceStringToIntCent, priceToDollars } from '../../utils/utils'
+import {
+  normFile,
+  priceStringToIntCent,
+  priceToDollars,
+  useSetFilesFromForm,
+  useSetValuesFromForm
+} from '../../utils/utils'
 import { RootState } from '../../reducer'
 import { Category, Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
@@ -24,12 +30,11 @@ const ProductEditForm: React.FC<any> = (
     isOpenEditProductModal, setIsOpenEditProductModal,
     payloadEditProduct, setPayloadEditProduct
   }) => {
-  const [fl, setFl] = useState<any>([])
+  const { fl, setFl, setFilesFromForm, propsUpload } = useSetFilesFromForm()
   const [formEditProduct] = Form.useForm()
   const [updateProduct] = useUpdateOneProduct()
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
-  const [values, setValues] = useState<Product | any>({})
-  console.log('values+++', values)
+  // @ts-ignore
+  const { values, setValues, handleChange } = useSetValuesFromForm()
 
   useEffect(() => {
     setValues(edited_product)
@@ -50,15 +55,7 @@ const ProductEditForm: React.FC<any> = (
     const { name, icon, description } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
-
-    console.log('Received values of form:', values)
-    const formData = new FormData()
-    // @ts-ignore
-    fl ?? valuefromformlist.files.forEach((file: any) => {
-      setFl((fl: any[]) => [...fl, file.originFileObj])
-      formData.append('files[]', file.originFileObj)
-    })
-
+    setFilesFromForm(valuefromformlist)
     updateProduct({
       variables: {
         data: { name, price, icon, description, categories: values.cat },
@@ -82,11 +79,7 @@ const ProductEditForm: React.FC<any> = (
     setIsOpenEditProductModal(false)
     clearEditProduct()
   }
-  const handleChange = (e: { target: any }) => {
-    const { name, value } = e.target
-    console.log('valllll', e.target)
-    setValues({ ...values, [name]: value })
-  }
+
   const handleChangeSelect = (value: []) => {
     const conn = {
       connect: value.filter(v => {
@@ -94,7 +87,7 @@ const ProductEditForm: React.FC<any> = (
       }).map((conCat: Category) => ({ id: Number(conCat) }))
     }
     const discon = {
-      disconnect: categoryList?.filter((cat: Category) => {
+      disconnect: edited_product?.categories?.filter((cat: Category) => {
         return !value.some(item => item === cat.id)
       }).map((c: Category) => ({ id: Number(c.id) }))
     }
@@ -104,37 +97,7 @@ const ProductEditForm: React.FC<any> = (
     }
     setValues({ ...values, 'cat': { ...cat } })
   }
-  if (cat_loading) {
-    return (<div>Loading...</div>)
-  }
-  if (cat_error || !cat_data) {
-    return (<div>Error...</div>)
-  }
-  const { categories } = cat_data
 
-  const normFile = (e: any) => {
-    console.log('Upload event:', e)
-    if (Array.isArray(e)) {
-      return e
-    }
-    return e && e.fileList
-  }
-
-  const propsUpload = {
-    multiple: true,
-    beforeUpload: (file: any) => {
-      setFl((fl: any[]) => [...fl, file])
-      return false
-    },
-    accept: 'image/jpeg,image/png,image/gif',
-    onRemove: (file: any) => {
-      const index = fl.indexOf(file)
-      const newFl = fl.slice()
-      newFl.splice(index, 1)
-      setFl([...newFl])
-    },
-    fl
-  }
   return (
     <Modal
       title={`Product information id: ${values.id}`}
@@ -230,7 +193,7 @@ const ProductEditForm: React.FC<any> = (
           name="description"
           // noStyle
         >
-          <TextArea  onChange={handleChange} maxLength={180} placeholder="description" rows={3}
+          <TextArea onChange={handleChange} maxLength={180} placeholder="description" rows={3}
                     style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
         <Button type="primary" htmlType="submit">
@@ -266,5 +229,5 @@ export default connect<typeof ProductEditForm>(
   // TODO:
 // @ts-ignore
   mapStateToProps,
-  {setPayloadEditProduct, setIsOpenEditProductModal, clearEditProduct }
+  { setPayloadEditProduct, setIsOpenEditProductModal, clearEditProduct }
 )(ProductEditForm)
