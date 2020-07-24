@@ -35,16 +35,9 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
   }
   const { categories } = cat_data
 
-  // @ts-ignore
-  // const categoriesAllWithoutRecycleBin = categories?.filter((category: Category) => {
-  //   return category._id !== REACT_APP_RECYCLE_BIN_ID
-  // })
-
-  const handleEdit = (id): void => {
+  const handleEdit = (id: number): void => {
     // @ts-ignore
-
-    const cat = categories?.find((cat: Category) => cat.id === id)    //
-    // @ts-ignore
+    const cat = categories?.find((cat: Category) => cat.id === id)
     editCategory(cat)
     setIsOpenEditCategoryModal(true)
   }
@@ -74,6 +67,11 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
       title: 'Name',
       dataIndex: 'name',
       key: 'name'
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description'
     },
     {
       title: 'ID',
@@ -138,7 +136,7 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
       key: 'id',
       render: (id: Number) => <>
         <Tooltip title="Edit this category">
-          <Button onClick={() => handleEdit(id)}
+          <Button onClick={() => handleEdit(Number(id))}
                   type="dashed">
             Edit
           </Button>

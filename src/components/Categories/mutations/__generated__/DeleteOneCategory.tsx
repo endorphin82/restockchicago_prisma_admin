@@ -11,14 +11,14 @@ export type DeleteOneCategoryVariables = {
 
 export type DeleteOneCategory = (
   { __typename: 'Mutation' }
-  & { deleteOneCategory?: Types.Maybe<(
+  & { deleteOneCategory: (
     { __typename: 'Category' }
     & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
     & { products: Array<(
       { __typename: 'Product' }
       & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
     )> }
-  )> }
+  ) }
 );
 
 

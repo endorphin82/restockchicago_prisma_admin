@@ -1,15 +1,17 @@
-import React, { useState } from "react"
-import { connect } from "react-redux"
-import { Modal, Form, Input, Button, Select } from "antd"
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
-import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
-import { setIsOpenAddCategoryModal } from "../../actions"
-import { RootState } from "../../reducer"
-import { ICategories } from "../Categories/types"
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { Modal, Form, Input, Button, Select, Upload } from 'antd'
+import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
+import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
+import { setIsOpenAddCategoryModal } from '../../actions'
+import { RootState } from '../../reducer'
+import { ICategories } from '../Categories/types'
 
 import { Category } from '../../__generated__/types'
 import { CategoriesDocument, useCategories } from '../Categories/queries/__generated__/Categories'
 import { useCreateOneCategory } from '../Categories/mutations/__generated__/CreateOneCategory'
+import { normFile, useSetFilesFromForm, useSetValuesFromForm } from '../../utils/utils'
+import { UploadOutlined } from '@ant-design/icons/lib'
 
 type PropsCategoryAddForm = {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
@@ -21,6 +23,8 @@ const CategoryAddForm: React.FC<any> = (
     setIsOpenAddCategoryModal,
     isOpenAddCategoryModal
   }) => {
+  const { fl, propsUpload, setFilesFromForm } = useSetFilesFromForm()
+
   const [createOneCategory] = useCreateOneCategory(
     {
       // TODO:
@@ -39,7 +43,7 @@ const CategoryAddForm: React.FC<any> = (
   )
 
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
-  const [values, setValues] = useState<Category | any>({})
+  const { values, setValues, handleChange } = useSetValuesFromForm()
 
   if (cat_loading) {
     return (<div>Loading...</div>)
@@ -55,29 +59,27 @@ const CategoryAddForm: React.FC<any> = (
   // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { icon, description, img, url, name } = values
+    setFilesFromForm(valuefromformlist)
+    const parent = valuefromformlist.parent
     // const _id = String(values._id)
     // const name = String(valuefromformlist.name)
-    console.log("++++++++++++",
+    console.log('++++++++++++',
       valuefromformlist
     )
-    console.log("+++V+++V++++++",
+    console.log('+++V+++V++++++',
       values
     )
 
     createOneCategory({
       variables: {
         data: {
-          name,
-          description,
-          url,
-          icon,
-          img,
-          parent: valuefromformlist.parent
-        }
+          ...values,
+          parent
+        },
+        ...((fl.length == 0) ? {} : { files: fl })
       }
-    }).then((m: any) => console.log("addCategoryMESSAGE:", m))
-      .catch((e: any) => console.log("addCategoryERROR:", e))
+    }).then((m: any) => console.log('addCategoryMESSAGE:', m))
+      .catch((e: any) => console.log('addCategoryERROR:', e))
 
     setIsOpenAddCategoryModal(false)
   }
@@ -85,11 +87,7 @@ const CategoryAddForm: React.FC<any> = (
     setIsOpenAddCategoryModal(false)
   }
 
-  const handleChange = (e: { target: HTMLInputElement }) => {
-    const { name, value } = e.target
-    console.log("target", e.target)
-    setValues({ ...values, [name]: value })
-  }
+  // const propsUpload = propsUploadF(setFl, fl)
 
   // @ts-ignore
   return (
@@ -106,12 +104,12 @@ const CategoryAddForm: React.FC<any> = (
 
         <Form.Item
           label="Name category"
-          rules={[{ required: true, message: "Name category is required" }]}
+          rules={[{ required: true, message: 'Name category is required' }]}
         >
           <Input
             name="name"
             onChange={handleChange} placeholder="name category"
-            style={{ width: "100%", marginRight: 8 }}/>
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
@@ -120,7 +118,7 @@ const CategoryAddForm: React.FC<any> = (
           <Input
             name="description"
             onChange={handleChange} placeholder="Description category"
-            style={{ width: "100%", marginRight: 8 }}/>
+            style={{ width: '100%', marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
@@ -135,121 +133,90 @@ const CategoryAddForm: React.FC<any> = (
             {
               // @ts-ignore
               categories?.map((category: Category) =>
-              <Select.Option
-                key={Number(category.id)}
-                value={Number(category.id)}
-              >{category.id}
-              </Select.Option>
-            )
+                <Select.Option
+                  key={Number(category.id)}
+                  value={Number(category.id)}
+                >{category.id}
+                </Select.Option>
+              )
             }
           </Select>
         </Form.Item>
 
-        <Form.List name="icons">
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? "icons" : ""}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={["onChange", "onBlur"]}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: "Please input icon url or delete this field."
-                        }
-                      ]}
-                      noStyle
-                    >
-                      <Input
-                        style={{ width: "90%", marginRight: 8 }}/>
-                    </Form.Item>
+        {/*<Form.List name="icons">*/}
+        {/*  {(fields, { add, remove }) => {*/}
+        {/*    return (*/}
+        {/*      <div>*/}
+        {/*        {fields.map((field, index) => (*/}
+        {/*          <Form.Item*/}
+        {/*            {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}*/}
+        {/*            label={index === 0 ? "icons" : ""}*/}
+        {/*            required={false}*/}
+        {/*            key={field.key}*/}
+        {/*          >*/}
+        {/*            <Form.Item*/}
+        {/*              {...field}*/}
+        {/*              validateTrigger={["onChange", "onBlur"]}*/}
+        {/*              rules={[*/}
+        {/*                {*/}
+        {/*                  required: true,*/}
+        {/*                  whitespace: true,*/}
+        {/*                  message: "Please input icon url or delete this field."*/}
+        {/*                }*/}
+        {/*              ]}*/}
+        {/*              noStyle*/}
+        {/*            >*/}
+        {/*              <Input*/}
+        {/*                style={{ width: "90%", marginRight: 8 }}/>*/}
+        {/*            </Form.Item>*/}
 
-                    {(fields.length >= 1) ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => {
-                          remove(field.name)
-                        }}
-                      />
-                    ) : <span/>}
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add()
-                    }}
-                    style={{ width: "80%" }}
-                  >
-                    <PlusOutlined/> Add icon url
-                  </Button>
-                </Form.Item>
-              </div>
-            )
-          }}
-        </Form.List>
+        {/*            {(fields.length >= 1) ? (*/}
+        {/*              <MinusCircleOutlined*/}
+        {/*                className="dynamic-delete-button"*/}
+        {/*                onClick={() => {*/}
+        {/*                  remove(field.name)*/}
+        {/*                }}*/}
+        {/*              />*/}
+        {/*            ) : <span/>}*/}
+        {/*          </Form.Item>*/}
+        {/*        ))}*/}
+        {/*        <Form.Item>*/}
+        {/*          <Button*/}
+        {/*            type="dashed"*/}
+        {/*            onClick={() => {*/}
+        {/*              add()*/}
+        {/*            }}*/}
+        {/*            style={{ width: "80%" }}*/}
+        {/*          >*/}
+        {/*            <PlusOutlined/> Add icon url*/}
+        {/*          </Button>*/}
+        {/*        </Form.Item>*/}
+        {/*      </div>*/}
+        {/*    )*/}
+        {/*  }}*/}
+        {/*</Form.List>*/}
 
-        <Form.List name="images">
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? "Images" : ""}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={["onChange", "onBlur"]}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: "Please input image url or delete this field."
-                        }
-                      ]}
-                      noStyle
-                    >
-                      <Input
-                        style={{ width: "90%", marginRight: 8 }}/>
-                    </Form.Item>
+        <Form.Item
+          label="images"
+          name="files"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+        >
+          <Upload {...propsUpload} listType="picture">
+            <Button>
+              <UploadOutlined/> Select Files
+            </Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          label="url"
+        >
+          <Input
+            name="url"
+            onChange={handleChange} placeholder="Url category"
+            style={{ width: '100%', marginRight: 8 }}/>
+        </Form.Item>
 
-                    {(fields.length >= 1) ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => {
-                          remove(field.name)
-                        }}
-                      />
-                    ) : <span/>}
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add()
-                    }}
-                    style={{ width: "80%" }}
-                  >
-                    <PlusOutlined/> Add image url
-                  </Button>
-                </Form.Item>
-              </div>
-            )
-          }}
-        </Form.List>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>

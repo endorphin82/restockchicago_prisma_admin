@@ -18,7 +18,7 @@ export type Category = {
   url: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   products: Array<Product>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   img?: Maybe<Scalars['String']>;
 };
 
@@ -32,7 +32,7 @@ export type CategoryProductsArgs = {
 
 export type CategoryCreateInput = {
   description?: Maybe<Scalars['String']>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   parent?: Maybe<Scalars['Int']>;
   url: Scalars['String'];
@@ -48,7 +48,7 @@ export type CategoryCreateManyWithoutProductsInput = {
 
 export type CategoryCreateWithoutProductsInput = {
   description?: Maybe<Scalars['String']>;
-  icon: Scalars['String'];
+  icon?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   parent?: Maybe<Scalars['Int']>;
   url: Scalars['String'];
@@ -64,7 +64,7 @@ export type CategoryFilter = {
 
 export type CategoryScalarWhereInput = {
   description?: Maybe<NullableStringFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   id?: Maybe<IntFilter>;
   name?: Maybe<StringFilter>;
   parent?: Maybe<NullableIntFilter>;
@@ -140,7 +140,7 @@ export type CategoryUpsertWithWhereUniqueWithoutProductsInput = {
 
 export type CategoryWhereInput = {
   description?: Maybe<NullableStringFilter>;
-  icon?: Maybe<StringFilter>;
+  icon?: Maybe<NullableStringFilter>;
   id?: Maybe<IntFilter>;
   name?: Maybe<StringFilter>;
   parent?: Maybe<NullableIntFilter>;
@@ -257,30 +257,33 @@ export type IntFilter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createOneCategory: Category;
-  updateOneCategory?: Maybe<Category>;
-  deleteOneCategory?: Maybe<Category>;
+  _createOneCategory: Category;
+  _updateOneCategory?: Maybe<Category>;
+  _deleteOneCategory?: Maybe<Category>;
   _createOneProduct: Product;
   _updateOneProduct?: Maybe<Product>;
   _deleteOneProduct?: Maybe<Product>;
+  createOneCategory: Category;
+  updateOneCategory: Category;
+  deleteOneCategory: Category;
   updateOneProduct: Product;
   createOneProduct: Product;
   deleteOneProduct: Product;
 };
 
 
-export type MutationCreateOneCategoryArgs = {
+export type Mutation_CreateOneCategoryArgs = {
   data: CategoryCreateInput;
 };
 
 
-export type MutationUpdateOneCategoryArgs = {
+export type Mutation_UpdateOneCategoryArgs = {
   data: CategoryUpdateInput;
   where: CategoryWhereUniqueInput;
 };
 
 
-export type MutationDeleteOneCategoryArgs = {
+export type Mutation_DeleteOneCategoryArgs = {
   where: CategoryWhereUniqueInput;
 };
 
@@ -298,6 +301,25 @@ export type Mutation_UpdateOneProductArgs = {
 
 export type Mutation_DeleteOneProductArgs = {
   where: ProductWhereUniqueInput;
+};
+
+
+export type MutationCreateOneCategoryArgs = {
+  data: CategoryCreateInput;
+  files?: Maybe<Array<Scalars['Upload']>>;
+};
+
+
+export type MutationUpdateOneCategoryArgs = {
+  data: CategoryUpdateInput;
+  where: CategoryWhereUniqueInput;
+  files?: Maybe<Array<Scalars['Upload']>>;
+  payloadEditCategory?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteOneCategoryArgs = {
+  where: CategoryWhereUniqueInput;
 };
 
 

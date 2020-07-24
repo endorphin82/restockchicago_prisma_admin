@@ -5,6 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CreateOneCategoryVariables = {
+  files?: Types.Maybe<Array<Types.Scalars['Upload']>>;
   data: Types.CategoryCreateInput;
 };
 
@@ -23,8 +24,8 @@ export type CreateOneCategory = (
 
 
 export const CreateOneCategoryDocument = gql`
-    mutation CreateOneCategory($data: CategoryCreateInput!) {
-  createOneCategory(data: $data) {
+    mutation CreateOneCategory($files: [Upload!], $data: CategoryCreateInput!) {
+  createOneCategory(files: $files, data: $data) {
     id
     name
     description
@@ -57,6 +58,7 @@ export type CreateOneCategoryMutationFn = ApolloReactCommon.MutationFunction<Cre
  * @example
  * const [createOneCategory, { data, loading, error }] = useCreateOneCategory({
  *   variables: {
+ *      files: // value for 'files'
  *      data: // value for 'data'
  *   },
  * });

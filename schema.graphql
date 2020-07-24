@@ -7,7 +7,7 @@ schema {
 
 type Category {
   description: String
-  icon: String!
+  icon: String
   id: Int!
   img: String
   name: String!
@@ -24,14 +24,17 @@ type File {
 }
 
 type Mutation {
+  _createOneCategory(data: CategoryCreateInput!): Category!
   _createOneProduct(data: ProductCreateInput!): Product!
+  _deleteOneCategory(where: CategoryWhereUniqueInput!): Category
   _deleteOneProduct(where: ProductWhereUniqueInput!): Product
+  _updateOneCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   _updateOneProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
-  createOneCategory(data: CategoryCreateInput!): Category!
+  createOneCategory(data: CategoryCreateInput!, files: [Upload!]): Category!
   createOneProduct(data: ProductCreateInput!, files: [Upload!]): Product!
-  deleteOneCategory(where: CategoryWhereUniqueInput!): Category
+  deleteOneCategory(where: CategoryWhereUniqueInput!): Category!
   deleteOneProduct(where: ProductWhereUniqueInput!): Product!
-  updateOneCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
+  updateOneCategory(data: CategoryUpdateInput!, files: [Upload!], payloadEditCategory: String, where: CategoryWhereUniqueInput!): Category!
   updateOneProduct(data: ProductUpdateInput!, files: [Upload!], payloadEditProduct: String, where: ProductWhereUniqueInput!): Product!
 }
 
@@ -61,7 +64,7 @@ type Query {
 input CategoryCreateInput {
   ImageCat: ImageCatCreateManyWithoutCategoryInput
   description: String
-  icon: String!
+  icon: String
   img: String
   name: String!
   parent: Int
@@ -77,7 +80,7 @@ input CategoryCreateManyWithoutProductsInput {
 input CategoryCreateWithoutProductsInput {
   ImageCat: ImageCatCreateManyWithoutCategoryInput
   description: String
-  icon: String!
+  icon: String
   img: String
   name: String!
   parent: Int
@@ -96,7 +99,7 @@ input CategoryScalarWhereInput {
   NOT: [CategoryScalarWhereInput!]
   OR: [CategoryScalarWhereInput!]
   description: NullableStringFilter
-  icon: StringFilter
+  icon: NullableStringFilter
   id: IntFilter
   img: NullableStringFilter
   name: StringFilter
@@ -172,7 +175,7 @@ input CategoryWhereInput {
   NOT: [CategoryWhereInput!]
   OR: [CategoryWhereInput!]
   description: NullableStringFilter
-  icon: StringFilter
+  icon: NullableStringFilter
   id: IntFilter
   img: NullableStringFilter
   name: StringFilter

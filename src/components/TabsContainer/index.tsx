@@ -57,12 +57,13 @@ const TabsContainer: React.FC<any> = ({ categoriesList }) => {
   console.log('categoriesList(categories)', categories)
   return (
     <Tabs defaultActiveKey="1" onChange={callback}>
-      <Tabs.TabPane tab="Products" key="1">
+      <TabPane tab="Categories" key="1">
+        <Categories/>
+      </TabPane>
+      <Tabs.TabPane tab="Products" key="2">
         <Products/>
       </Tabs.TabPane>
-      <TabPane tab="Categories" key="2">
-        {/*<Categories/>*/}
-      </TabPane>
+
       {/*<TabPane tab={*/}
       {/*  <span>*/}
       {/*    <RecycleBinIcon*/}

@@ -1,18 +1,18 @@
-mutation CreateOneCategory($data: CategoryCreateInput! ) {
-    createOneCategory(data: $data ){
-        id
-        name
-        description
-        url
-        parent
-        icon
-        img
-        products{
-            id
-            name
-            price
-            icon
-            img
-        }
+mutation CreateOneCategory($files: [Upload!], $data: CategoryCreateInput! ) {
+  createOneCategory(files: $files, data: $data ){
+    id
+    name
+    description
+    url
+    parent
+    icon
+    img
+    products{
+      id
+      name
+      price
+      icon
+      img
     }
+  }
 }
