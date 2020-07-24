@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { useCategories, CategoriesDocument } from '../Categories/queries/__generated__/Categories'
 import { useDeleteOneCategory } from '../Categories/mutations/__generated__/DeleteOneCategory'
 import { REACT_APP_BASE_URL } from '../../actions/types'
+import { RootState } from '../../reducer'
 
 const styleIconInTable = { width: '20px', height: '100%', marginRight: '10px' }
 const styleImagesInTable = { width: '20px', height: '100%', marginRight: '10px' }
@@ -17,8 +18,10 @@ export interface PropsCategoryTable {
   setIsOpenEditCategoryModal: (isOpen: Boolean | undefined) => void
 }
 
-const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryModal }) => {
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
+const CategoriesTable: React.FC<any> = (
+  {
+    categoryList, editCategory, setIsOpenEditCategoryModal
+  }) => {
   const [deleteOneCategory] = useDeleteOneCategory({
       refetchQueries: [{
         query: CategoriesDocument
@@ -27,13 +30,6 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [categoryDeleted, setCategoryDeleted] = useState<Category | any>({})
-  if (cat_loading) {
-    return (<div>Loading...</div>)
-  }
-  if (cat_error || !cat_data) {
-    return (<div>Error...</div>)
-  }
-  const { categories } = cat_data
 
   const handleEdit = (id: number): void => {
     // @ts-ignore
@@ -156,7 +152,7 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
 
   return (
     <>
-      <Table dataSource={categories} columns={columns} rowKey="id"/>
+      <Table dataSource={categoryList} columns={columns} rowKey="id"/>
       <Modal
         title="Delete Category With All Products WITHOUT recovery!?"
         visible={Boolean(isVisualDeleteModal)}
@@ -169,6 +165,16 @@ const CategoriesTable: React.FC<any> = ({ editCategory, setIsOpenEditCategoryMod
   )
 }
 
-export default connect<typeof CategoriesTable>(null, {
-  editCategory, setIsOpenEditCategoryModal
-})(CategoriesTable)
+interface StateProps {
+  categoryList?: Category | {}
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  categoryList: state.categories_list.categories
+})
+
+export default connect<typeof CategoriesTable>(
+// @ts-ignore
+  mapStateToProps, {
+    editCategory, setIsOpenEditCategoryModal
+  })(CategoriesTable)
