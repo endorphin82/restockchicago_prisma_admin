@@ -12,7 +12,6 @@ import {
 import { RootState } from '../../reducer'
 import { Category, Product } from '../../__generated__/types'
 import { useUpdateOneProduct } from '../Products/mutations/__generated__/UpdateOneProduct'
-import { useCategories } from '../Categories/queries/__generated__/Categories'
 import { UploadOutlined } from '@ant-design/icons'
 import ImageTable from '../ImageTable'
 import TextArea from 'antd/lib/input/TextArea'
@@ -52,13 +51,12 @@ const ProductEditForm: React.FC<any> = (
     }
   }, [edited_product, formEditProduct])
   const onFinish = (valuefromformlist: Product) => {
-    const { name, icon, description } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
     setFilesFromForm(valuefromformlist)
     updateProduct({
       variables: {
-        data: { name, price, icon, description, categories: values.cat },
+        data: { ...valuefromformlist, price, categories: values.cat },
         ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id

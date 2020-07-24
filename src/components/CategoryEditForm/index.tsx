@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState } from '../../reducer'
-import { clearEditCategory, setIsOpenEditCategoryModal } from '../../actions'
+import { clearEditCategory, setIsOpenEditCategoryModal, setPayloadEditCategory } from '../../actions'
 import { Button, Form, Input, Modal, Select } from 'antd'
 import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
 import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
 import { Category } from '../../__generated__/types'
-import { REACT_APP_RECYCLE_BIN_ID } from '../../actions/types'
 import { useUpdateOneCategory } from '../Categories/mutations/__generated__/UpdateOneCategory'
 import { ProductsDocument } from '../Products/queries/__generated__/Products'
-import { CategoriesDocument, useCategories } from '../Categories/queries/__generated__/Categories'
+import { CategoriesDocument } from '../Categories/queries/__generated__/Categories'
+import { useSetFilesFromForm, useSetValuesFromForm } from '../../utils/utils'
 
 type PropsCategoryEditForm = {
   setIsOpenEditCategoryModal: (isOpen: Boolean) => void
   isOpenEditCategoryModal: Boolean
   edited_category: Category
 }
-const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategoryModal, isOpenEditCategoryModal }) => {
+const CategoryEditForm: React.FC<any> = (
+  {
+    setPayloadEditCategory, edited_category, setIsOpenEditCategoryModal,
+    isOpenEditCategoryModal, categoryList
+  }) => {
   const [formEditCategory] = Form.useForm()
   const [updateOneCategory] = useUpdateOneCategory({
     refetchQueries: [
@@ -28,8 +32,8 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
       }
     ]
   })
-
-  const [values, setValues] = useState<Category | any>({})
+  const { values, setValues, handleChange } = useSetValuesFromForm()
+  const { fl, setFl, setFilesFromForm, propsUpload } = useSetFilesFromForm()
   useEffect(() => {
     setValues(edited_category)
   }, [edited_category])
@@ -44,46 +48,28 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
       formEditCategory.resetFields()
     }
   }, [edited_category, formEditCategory])
-  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategories()
-
-  if (cat_loading) {
-    return (<div>Loading...</div>)
-  }
-  if (cat_error || !cat_data) {
-    return (<div>Error...</div>)
-  }
-  const { categories } = cat_data
-
-  // @ts-ignore
-  // const categoriesAllWithoutRecycleBin = categories?.filter((category: Category) => {
-  //   return category?.id !== REACT_APP_RECYCLE_BIN_ID
-  // })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { name, img, icon, parent } = valuefromformlist
     const id = Number(values?.id)
-
     updateOneCategory({
       variables: {
-        data: {
-          name, icon, parent
-        },
+        // @ts-ignore
+        data: { ...valuefromformlist },
+        ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
         }
       }
     }).then((m: any) => console.log('updateProductMESSAGE:', m))
       .catch((e: any) => console.log('updateProductERROR:', e))
-
+      .finally(() => {
+        setFl([])
+      })
     setIsOpenEditCategoryModal(false)
   }
   const handleCancel = () => {
     setIsOpenEditCategoryModal(false)
     // clearEditCategory()
-  }
-  const handleChange = (e: { target: HTMLInputElement }) => {
-    const { name, value } = e.target
-    setValues({ ...values, [name]: value })
   }
 
   return (
@@ -149,13 +135,13 @@ const CategoryEditForm: React.FC<any> = ({ edited_category, setIsOpenEditCategor
             placeholder="Select category">
             {
               // @ts-ignore
-              categories?.map((category: Category) =>
-              <Select.Option
-                key={Number(category.id)}
-                value={Number(category.id)}
-              >{category.id}
-              </Select.Option>
-            )
+              categoryList?.map((category: Category) =>
+                <Select.Option
+                  key={Number(category.id)}
+                  value={Number(category.id)}
+                >{category.id}
+                </Select.Option>
+              )
             }
           </Select>
         </Form.Item>
@@ -240,16 +226,18 @@ const formItemLayoutWithOutLabel = {
 interface StateProps {
   isOpenEditCategoryModal: Boolean
   edited_category?: Category | {}
+  categoryList?: Category | {},
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenEditCategoryModal: state.edit_cat_modal.isOpen,
-  edited_category: state.edit_category.category
+  edited_category: state.edit_category.category,
+  categoryList: state.categories_list.categories
 })
 
 export default connect<typeof CategoryEditForm>(
   // TODO:
 // @ts-ignore
   mapStateToProps,
-  { setIsOpenEditCategoryModal, clearEditCategory }
+  { setIsOpenEditCategoryModal, setPayloadEditCategory, clearEditCategory }
 )(CategoryEditForm)
