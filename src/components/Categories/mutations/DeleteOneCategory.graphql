@@ -7,12 +7,5 @@ mutation DeleteOneCategory($where: CategoryWhereUniqueInput!) {
         parent
         icon
         img
-        products{
-            id
-            name
-            price
-            icon
-            img
-        }
     }
 }

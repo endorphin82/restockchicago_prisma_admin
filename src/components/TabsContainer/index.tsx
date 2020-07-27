@@ -1,5 +1,5 @@
 import React from 'react'
-import { Empty, Tabs } from 'antd'
+import { Tabs } from 'antd'
 import Products from '../Products'
 
 import Categories from '../Categories'

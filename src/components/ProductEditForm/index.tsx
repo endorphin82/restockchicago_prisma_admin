@@ -51,12 +51,13 @@ const ProductEditForm: React.FC<any> = (
     }
   }, [edited_product, formEditProduct])
   const onFinish = (valuefromformlist: Product) => {
+    const { name, icon } = valuefromformlist
     const id = Number(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
     setFilesFromForm(valuefromformlist)
     updateProduct({
       variables: {
-        data: { ...valuefromformlist, price, categories: values.cat },
+        data: { name, icon, price, categories: values.cat },
         ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
