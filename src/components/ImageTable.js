@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { REACT_APP_BASE_URL } from '../actions/types'
 import ImageCard from './ImageCard'
 import RLDD from 'react-list-drag-and-drop/lib/RLDD'
 import { Empty } from 'antd'
 
 
-const ImageTable = ({ isOpenEditProductModal, editedItem, setPayloadEditItem }) => {
+const ImageTable = ({ editedItem, setPayloadEditItem }) => {
   const [items, setNewOrderedItems] = useState([])
   const [delFileNames, setDelFileNames] = useState([])
   useEffect(() => {
@@ -56,7 +55,7 @@ const ImageTable = ({ isOpenEditProductModal, editedItem, setPayloadEditItem }) 
   }
 
   return (items.length === 0) ? <Empty description="No Images"/> :
-    (!editedItem || !isOpenEditProductModal)
+    (!editedItem)
       ? <div>Load..</div>
       : <RLDD cssClasses='image__list'
               onChange={handleRLDDChange}
@@ -77,12 +76,4 @@ const ImageTable = ({ isOpenEditProductModal, editedItem, setPayloadEditItem }) 
       />
 }
 
-
-const mapStateToProps = (state) => ({
-  isOpenEditProductModal: state.edit_product_modal.isOpen
-})
-
-export default connect(
-// @ts-ignore
-  mapStateToProps
-)(ImageTable)
+export default ImageTable

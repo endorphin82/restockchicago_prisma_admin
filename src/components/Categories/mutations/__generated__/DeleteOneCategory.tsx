@@ -14,10 +14,6 @@ export type DeleteOneCategory = (
   & { deleteOneCategory: (
     { __typename: 'Category' }
     & Pick<Types.Category, 'id' | 'name' | 'description' | 'url' | 'parent' | 'icon' | 'img'>
-    & { products: Array<(
-      { __typename: 'Product' }
-      & Pick<Types.Product, 'id' | 'name' | 'price' | 'icon' | 'img'>
-    )> }
   ) }
 );
 
@@ -32,13 +28,6 @@ export const DeleteOneCategoryDocument = gql`
     parent
     icon
     img
-    products {
-      id
-      name
-      price
-      icon
-      img
-    }
   }
 }
     `;

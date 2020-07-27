@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Modal, Table, Tooltip, Tag } from 'antd'
-import { Category, Product } from '../../__generated__/types'
+import { Category } from '../../__generated__/types'
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined'
 import { editCategory } from '../../actions'
 import { setIsOpenEditCategoryModal } from '../../actions'
 import { connect } from 'react-redux'
-import { useCategories, CategoriesDocument } from '../Categories/queries/__generated__/Categories'
+import { CategoriesDocument } from '../Categories/queries/__generated__/Categories'
 import { useDeleteOneCategory } from '../Categories/mutations/__generated__/DeleteOneCategory'
 import { REACT_APP_BASE_URL } from '../../actions/types'
 import { RootState } from '../../reducer'
@@ -14,7 +14,7 @@ const styleIconInTable = { width: '20px', height: '100%', marginRight: '10px' }
 const styleImagesInTable = { width: '20px', height: '100%', marginRight: '10px' }
 
 export interface PropsCategoryTable {
-  editCategory: (product: Product | undefined) => void
+  editCategory: (category: Category | undefined) => void
   setIsOpenEditCategoryModal: (isOpen: Boolean | undefined) => void
 }
 
@@ -23,17 +23,17 @@ const CategoriesTable: React.FC<any> = (
     categoryList, editCategory, setIsOpenEditCategoryModal
   }) => {
   const [deleteOneCategory] = useDeleteOneCategory({
-      refetchQueries: [{
-        query: CategoriesDocument
-      }]
-    }
-  )
+    refetchQueries: [{
+      query: CategoriesDocument
+    }]
+  })
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [categoryDeleted, setCategoryDeleted] = useState<Category | any>({})
 
   const handleEdit = (id: number): void => {
+    console.log('id', id)
     // @ts-ignore
-    const cat = categories?.find((cat: Category) => cat.id === id)
+    const cat = categoryList?.find((cat: Category) => cat.id === id)
     editCategory(cat)
     setIsOpenEditCategoryModal(true)
   }
@@ -41,7 +41,7 @@ const CategoriesTable: React.FC<any> = (
   const handleDelete = (id: Number): void => {
     setIsVisualDeleteModal(true)
     // @ts-ignore
-    setCategoryDeleted(categories.find((cat: Category) => cat.id === id))
+    setCategoryDeleted(categoryList.find((cat: Category) => cat.id === id))
   }
 
   const handleOk = (id: Number) => {
@@ -81,7 +81,9 @@ const CategoriesTable: React.FC<any> = (
       render: (parent: String) => {
         return parent ?
           <span>
-          <Tag color="green" key={String(parent)}>{parent}</Tag>
+          <Tag color="gold" key={String(parent)}>{categoryList.find(
+            (cat: Category) => Number(cat?.id) == Number(parent)).name}
+          </Tag>
         </span> : null
       }
     },
@@ -128,7 +130,7 @@ const CategoriesTable: React.FC<any> = (
     },
     {
       title: 'Actions',
-      dataIndex: '_id',
+      dataIndex: 'id',
       key: 'id',
       render: (id: Number) => <>
         <Tooltip title="Edit this category">
@@ -156,7 +158,7 @@ const CategoriesTable: React.FC<any> = (
       <Modal
         title="Delete Category With All Products WITHOUT recovery!?"
         visible={Boolean(isVisualDeleteModal)}
-        onOk={() => handleOk(categoryDeleted._id)}
+        onOk={() => handleOk(categoryDeleted.id)}
         onCancel={handleCancel}
       >
         <p>{categoryDeleted.name}</p>

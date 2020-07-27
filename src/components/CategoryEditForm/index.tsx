@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState } from '../../reducer'
 import { clearEditCategory, setIsOpenEditCategoryModal, setPayloadEditCategory } from '../../actions'
-import { Button, Form, Input, Modal, Select } from 'antd'
-import MinusCircleOutlined from '@ant-design/icons/lib/icons/MinusCircleOutlined'
-import PlusOutlined from '@ant-design/icons/lib/icons/PlusOutlined'
+import { Button, Form, Input, Modal, Select, Upload } from 'antd'
 import { Category } from '../../__generated__/types'
 import { useUpdateOneCategory } from '../Categories/mutations/__generated__/UpdateOneCategory'
 import { ProductsDocument } from '../Products/queries/__generated__/Products'
 import { CategoriesDocument } from '../Categories/queries/__generated__/Categories'
-import { useSetFilesFromForm, useSetValuesFromForm } from '../../utils/utils'
+import { UploadOutlined } from '@ant-design/icons'
+
+import ImageTable from '../ImageTable'
+import { normFile, useSetFilesFromForm, useSetValuesFromForm } from '../../utils/utils'
 
 type PropsCategoryEditForm = {
   setIsOpenEditCategoryModal: (isOpen: Boolean) => void
@@ -19,7 +20,7 @@ type PropsCategoryEditForm = {
 const CategoryEditForm: React.FC<any> = (
   {
     setPayloadEditCategory, edited_category, setIsOpenEditCategoryModal,
-    isOpenEditCategoryModal, categoryList
+    isOpenEditCategoryModal, categoryList, payloadEditCategory
   }) => {
   const [formEditCategory] = Form.useForm()
   const [updateOneCategory] = useUpdateOneCategory({
@@ -34,6 +35,7 @@ const CategoryEditForm: React.FC<any> = (
   })
   const { values, setValues, handleChange } = useSetValuesFromForm()
   const { fl, setFl, setFilesFromForm, propsUpload } = useSetFilesFromForm()
+
   useEffect(() => {
     setValues(edited_category)
   }, [edited_category])
@@ -43,6 +45,7 @@ const CategoryEditForm: React.FC<any> = (
       'description': edited_category.description,
       'parent': edited_category.parent,
       'id': edited_category.id
+      // 'categories': categoryList.map((c: Category) => c.id)(edited_category.parent)
     })
     return () => {
       formEditCategory.resetFields()
@@ -50,15 +53,18 @@ const CategoryEditForm: React.FC<any> = (
   }, [edited_category, formEditCategory])
 
   const onFinish = (valuefromformlist: Category) => {
+    const { name, icon, description, parent, url } = valuefromformlist
     const id = Number(values?.id)
+    setFilesFromForm(valuefromformlist)
     updateOneCategory({
       variables: {
         // @ts-ignore
-        data: { ...valuefromformlist },
+        data: { name, icon, description, parent, url },
         ...((fl.length == 0) ? {} : { files: fl }),
         where: {
           id
-        }
+        },
+        payloadEditCategory
       }
     }).then((m: any) => console.log('updateProductMESSAGE:', m))
       .catch((e: any) => console.log('updateProductERROR:', e))
@@ -139,64 +145,31 @@ const CategoryEditForm: React.FC<any> = (
                 <Select.Option
                   key={Number(category.id)}
                   value={Number(category.id)}
-                >{category.id}
+                >{category.name}
                 </Select.Option>
               )
             }
           </Select>
         </Form.Item>
 
-        <Form.List name="images">
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? 'Images' : ''}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={['onChange', 'onBlur']}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: 'Please input image url or delete this field.'
-                        }
-                      ]}
-                      noStyle
-                    >
-                      <Input value={values.images[index]} placeholder="image url"
-                             style={{ width: '90%', marginRight: 8 }}/>
-                    </Form.Item>
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => {
-                          remove(field.name)
-                        }}
-                      />
-                    ) : <span/>}
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add()
-                    }}
-                    style={{ width: '80%' }}
-                  >
-                    <PlusOutlined/> Add image url
-                  </Button>
-                </Form.Item>
-              </div>
-            )
-          }}
-        </Form.List>
+        <Form.Item name="images" style={{ width: '100%' }}>
+          <ImageTable
+            setPayloadEditItem={setPayloadEditCategory}
+            editedItem={edited_category}/>
+        </Form.Item>
+
+        <Form.Item
+          label="Add images"
+          name="files"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+        >
+          <Upload {...propsUpload} listType="picture">
+            <Button>
+              <UploadOutlined/> Select Images
+            </Button>
+          </Upload>
+        </Form.Item>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
@@ -226,13 +199,15 @@ const formItemLayoutWithOutLabel = {
 interface StateProps {
   isOpenEditCategoryModal: Boolean
   edited_category?: Category | {}
-  categoryList?: Category | {},
+  categoryList?: Category | {}
+  payloadEditCategory: string | undefined
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenEditCategoryModal: state.edit_cat_modal.isOpen,
   edited_category: state.edit_category.category,
-  categoryList: state.categories_list.categories
+  categoryList: state.categories_list.categories,
+  payloadEditCategory: state.payload_edit_category.editCategoryPayload
 })
 
 export default connect<typeof CategoryEditForm>(
